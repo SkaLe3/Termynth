@@ -420,5 +420,4 @@ FodyWeavers.xsd
 # ============ Skale ============
 
 .vscode/
-BuildGCC/
-BuildVS/
+Build/

@@ -1,0 +1,17 @@
+# TermynthConfig.cmake.in
+
+# 1. Include the imported targets file
+# This path is calculated automatically by configure_package_config_file
+# based on the INSTALL_DESTINATION
+include("${CMAKE_CURRENT_LIST_DIR}/TermynthTargets.cmake")
+
+# 2. Set the public include directory variable
+# Termynth_INCLUDE_DIRS is commonly used for compatibility with older CMake.
+# The actual path is calculated by configure_package_config_file using PATH_VARS.
+set(Termynth_INCLUDE_DIRS "${PACKAGE_CMAKE_INSTALL_INCLUDEDIR}/Termynth-${Termynth_VERSION}")
+
+
+# 3. Define the main package variables
+set(Termynth_LIBRARIES Termynth::TermynthEngine)
+set(Termynth_FOUND TRUE)
+
