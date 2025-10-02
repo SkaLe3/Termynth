@@ -10,22 +10,33 @@ enum class EColorMode
 
 namespace GlobalParameters
 {
-    /* 
-    * Allows 24-bit color with ANSI escape sequences
-    * This setting is available with WindowsApiOutput off
-    * Attention: Changing this value requires full window redraw to take effect (use IPlatformWindow::ForceRedraw() )
+    /**
+    * @brief Global color mode setting.
+    *
+    * Enables 24-bit color using ANSI escape sequences.
+    * This setting is only available when WindowsApiOutput is off.
+    *
+    * @note Changing this value requires a full window redraw to take effect.
+    *       Call IPlatformWindow::ForceRedraw() after modifying this variable.
     */
     extern EColorMode g_ColorMode;
 
-    /*
-    * Allows WindowsApi use for output to achieve smoother update
-    * TThis setting does NOT support 24-bit colors and text styles
+    /**
+    * @brief Global flag to enable Windows API output.
+    *
+    * When enabled, output uses the Windows API for smoother updates.
+    *
+    * @note This setting does NOT support 24-bit colors or text styles.
     */
     extern bool g_bUseWindowsApiOutput;
 
-    /*
-    * Viewport size is set at compilation time but may be overriden with command line arguments (@TODO: Add command line arguments override)
-    * Runtime resizing is not yet allowed
+    /**
+    * @brief Global viewport size settings.
+    *
+    * The viewport width and height are set at compile time but may later
+    * be overridden with command line arguments. (@TODO: Implement command line override)
+    *
+    * @note Runtime resizing of the viewport is not yet supported.
     */
     extern uint32 g_ViewportWidth;
     extern uint32 g_ViewportHeight;

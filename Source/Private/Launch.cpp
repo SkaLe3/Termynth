@@ -66,8 +66,3 @@ int main(int argc, char* argv[])
     Shutdown();
     return result;
 }
-
-// TODO: keep 2 grids and only update differences to reduce flicker (test)
-// TODO: Introduce multithreading
-// TODO: Make states for all keys
-// TODO: Logging to file

@@ -32,12 +32,12 @@ int32 EngineLoop::Init()
     // User Init. May override viewport size
     ApplicationInit();
 
-    // TODO: Parse commnadline arguments to override viewport size here
+    // @TODO: Parse commnadline arguments to override viewport size here
 
     WindowSubsystem::Get().Init(GlobalParameters::g_ViewportWidth, GlobalParameters::g_ViewportHeight);
     Renderer::Get().Init(WindowSubsystem::Get().GetWindow());
     g_Engine = new Engine();
-    // Engine parse command line if needed in the future
+    // Engine parse command line if needed
     // Make Init profiling
     g_Engine->Init();
     // Make Start profiling
