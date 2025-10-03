@@ -539,6 +539,14 @@ try:
             target = generate_project, args=(generation_finished,generation_cancelled, progress_var, selection_var.get(), compiler_selection.get()), daemon=True
         )
         thread.start()
+        
+    def show_name_frame():
+        if selection_var.get():
+            row1.pack_forget()
+        else:
+            row1.pack(fill='x', padx=0, pady=5, before=row2)  
+
+     
     app_root = Tk()
     #app_root.title("Termynth Project Generator")
     app_root.wm_title("Termynth Project Generator")
@@ -630,9 +638,9 @@ try:
     
     
     selection_var = BooleanVar(value=False)
-    radio_a = ttk.Radiobutton(row3, text="Engine Installed", variable=selection_var, value=False, style="My.TRadiobutton")
+    radio_a = ttk.Radiobutton(row3, text="Engine Installed", variable=selection_var, command=show_name_frame, value=False, style="My.TRadiobutton")
     radio_a.pack(side='left', padx=(0, 5))
-    radio_b = ttk.Radiobutton(row3, text="Engine Source", variable=selection_var, value=True, style="My.TRadiobutton")
+    radio_b = ttk.Radiobutton(row3, text="Engine Source", variable=selection_var,command=show_name_frame, value=True, style="My.TRadiobutton")
     radio_b.pack(side='left', padx=(5, 0))
     
     
@@ -641,7 +649,7 @@ try:
     cancel_btn = ttk.Button(row3, text="Cancel", command=lambda: close_window(app_root),  style="My.TButton")
     cancel_btn.pack(side='right', padx=(0, 5))
     
-    
+    show_name_frame()
     
     app_root.overrideredirect(True) 
     app_root.after(10, lambda: set_appwindow(app_root))
