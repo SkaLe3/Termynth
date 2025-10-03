@@ -11,19 +11,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Development;Shipping" CACHE STRING "" FORCE)
 
-# Default flags and MSVC definitions for consistency
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEVELOPMENT "-g -O1 -Wall -Wextra")
-set(CMAKE_CXX_FLAGS_SHIPPING "-O2 -DNDEBUG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-
 if(MSVC)
-    set(CMAKE_C_FLAGS_DEVELOPMENT "${CMAKE_C_FLAGS_RELEASE} /DDEVELOPMENT")
-    set(CMAKE_CXX_FLAGS_DEVELOPMENT "${CMAKE_CXX_FLAGS_RELEASE} /DDEVELOPMENT")
-    set(CMAKE_C_FLAGS_SHIPPING "${CMAKE_C_FLAGS_RELEASE} /DSHIPPING")
-    set(CMAKE_CXX_FLAGS_SHIPPING "${CMAKE_CXX_FLAGS_RELEASE} /DSHIPPING")
+    # MSVC warning levels and defines
+	set(CMAKE_CXX_FLAGS_DEBUG "/W4 /Od /DDEBUG")
+	set(CMAKE_CXX_FLAGS_DEVELOPMENT "/W4 /O1 /DDEVELOPMENT")
+	set(CMAKE_CXX_FLAGS_SHIPPING "/W4 /O2 /DNDEBUG /DSHIPPING")
+	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "" CACHE STRING "Linker flags for DEBUG executables")
+	set(CMAKE_EXE_LINKER_FLAGS_DEVELOPMENT "" CACHE STRING "Linker flags for DEVELOPMENT executables")
+	set(CMAKE_EXE_LINKER_FLAGS_SHIPPING "" CACHE STRING "Linker flags for SHIPPING executables")
+else()
+    # GCC/Clang flags
+    set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra")
+    set(CMAKE_CXX_FLAGS_DEVELOPMENT "-g -O1 -Wall -Wextra")
+    set(CMAKE_CXX_FLAGS_SHIPPING "-O2 -DNDEBUG")
 endif()
-
 
 # =======================================================
 # --------------------- Source File Definition ---------------------
