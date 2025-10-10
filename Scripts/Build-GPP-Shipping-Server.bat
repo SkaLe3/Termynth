@@ -7,11 +7,8 @@ REM =========================
 cd /d "%~dp0"
 cd ..
 
-if not exist BuildGCC mkdir BuildGCC
-cd BuildGCC
-
-cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Shipping
-mingw32-make Server
+cmake -B Build/GCC -S . -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Shipping
+cmake --build Build/GCC  --target TermynthEngineServer
 
 echo.
 echo Build with g++ completed.

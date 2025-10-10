@@ -7,9 +7,8 @@ REM =========================
 cd /d "%~dp0"
 cd ..
 
-
-cmake -B Build/GCC -S . -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug 
-cmake --build Build/GCC  --target TermynthEngine
+cmake -B Build/GCC -S . -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Development  
+cmake --build Build/GCC --target TermynthEngineServer
 
 echo.
 echo Build with g++ completed.

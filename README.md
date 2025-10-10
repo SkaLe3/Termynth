@@ -3,7 +3,6 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%20|%20Linux-lightgrey)](https://github.com/SkaLe3/Termynth)
 [![C++](https://img.shields.io/badge/Language-C++20-blue)](https://isocpp.org)
 
-Logo placeholder
 
 **Termynth** is a cross-platform game engine that features console-based rendering and built-in networking for multiplayer games.
 It is designed to be lightweight, flexible, and developer-friendly, supporting multiple ways of integration depending on your workflow. (Add: provides framework, but it is not strict, gives freedom)

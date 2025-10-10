@@ -56,7 +56,7 @@ try:
         engine_install_location = os.path.join(engine_root, "Build", compiler, "Install")
         submodule_option = "ON" if use_submodule else "OFF"
         
-        targets = ["","-Server"]
+        targets = ["","Server"]
         configurations = ["Debug", "Development", "Shipping"]
            
         script_name_base = os.path.basename(script_base)
@@ -67,7 +67,8 @@ try:
         for conf in configurations:
             script_name_conf = script_name_type.replace("Configuration", conf)
             for target in targets:
-                script_name_conf_target = script_name_conf.replace("-Target", target)
+                replacement_name = "" if not target else "-" + target
+                script_name_conf_target = script_name_conf.replace("-Target", replacement_name)
                 script_location = os.path.dirname(script_base)
                 script_full_filename = os.path.join(script_location, script_name_conf_target)
                 
