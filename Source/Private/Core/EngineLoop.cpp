@@ -58,30 +58,31 @@ void EngineLoop::Tick()
     BeginExitIfRequested();
     //int64 currentFrame = g_FrameCounter;
 
-    InputManager::Get().PollInput();
+    auto DoTick = [&](float deltaTime)
+    {
+        InputManager::Get().PollInput();
+        Renderer::Get().BeginFrame();
+        g_Engine->Tick(deltaTime);
+        Renderer::Get().EndFrame();
+        WindowSubsystem::Get().GetWindow()->SwapBuffers();
+        g_FrameCounter++;
+    };
 
     UpdateTimeStep();
   
-    Renderer::Get().BeginFrame();
     if (App::UseFixedTimeStep())
     {
         while (App::FixedTimeStepReached())
         {
-            g_Engine->Tick(App::GetFixedDeltaTime());
+            DoTick(App::GetFixedDeltaTime());
             App::SubtructDeltaTimeAccumulator();
         }
     }
     else
     {
-        g_Engine->Tick(App::GetDeltaTime());
+        DoTick(App::GetDeltaTime());
     }
-    g_Engine->TickFrame(App::GetDeltaTime());
 
-    Renderer::Get().EndFrame();
-
-    WindowSubsystem::Get().GetWindow()->SwapBuffers();
-
-    g_FrameCounter++;
 }
 
 void EngineLoop::Exit()

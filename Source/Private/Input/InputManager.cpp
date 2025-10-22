@@ -1,7 +1,8 @@
 #include "Input/InputManager.h"
 #include "Platform/PlatformUtils.h"
+#include "Core/Logger.h"
 
-#include <fstream>
+#include <algorithm>
 
 
 InputManager &InputManager::Get()
@@ -10,48 +11,237 @@ InputManager &InputManager::Get()
     return s_Instance;
 }
 
+InputManager::InputManager()
+{
+    m_KeyStates.clear();
+
+    ConfigureAxis("Horizontal", Key::Right, Key::Left);
+    ConfigureAxis("Vertical", Key::Up, Key::Down);
+    ConfigureAxis("HorizontalWASD", Key::D, Key::A);
+    ConfigureAxis("VerticalWASD", Key::W, Key::S);
+
+}
+
+
 void InputManager::PollInput()
 {
-    m_PreviousState = m_CurrentState;
-
-    for (auto& keystate : m_CurrentState)
+    // Update key states: Pressed -> Held, Released -> None
+    for (auto& [key, state] : m_KeyStates)
     {
-        keystate.second = false;
+        if (state == KeyState::Pressed)
+            state = KeyState::Held;
+        else if (state == KeyState::Released)
+            state = KeyState::None;
     }
+
+    std::unordered_map<Key, bool> currentFrameKeys;
 
     while (PlatformUtils::Get().kbhitNonBlocking())
     {
-        uint8 c = PlatformUtils::Get().getchNonBlocking();
-        int32 ext = 0;
+        uint8_t c = PlatformUtils::Get().getchNonBlocking();
+        int32_t ext = 0;
 
         PlatformUtils::Get().ReadExtendedKey(c, ext);
 
         Key key = TranslateCharToKey(c, ext);
+
         if (key != Key::Unknown)
         {
-            m_CurrentState[key] = true;
+            currentFrameKeys[key] = true;
         }
     }
 
-    for (auto& [key, wasDown] : m_PreviousState)
+    // Now held
+    for (const auto& [key, pressed] : currentFrameKeys)
     {
-        if (wasDown && !m_CurrentState[key])
+        KeyState currentState = m_KeyStates[key];
+        if (currentState == KeyState::None || currentState == KeyState::Released)
         {
-            // Generate release event
+            m_KeyStates[key] = KeyState::Pressed;
+            TriggerKeyPressedCallbacks(key);
         }
-        if (!wasDown && m_CurrentState[key])
+        else
         {
-            // Generate press event
+            m_KeyStates[key] = KeyState::Held;
         }
-        if (wasDown && m_CurrentState[key])
+    }
+
+    // Now not held
+    for (auto& [key, state] : m_KeyStates)
+    {
+        if ((state == KeyState::Held || state == KeyState::Pressed) &&
+            currentFrameKeys.find(key) == currentFrameKeys.end())
         {
-            // Generate held event
+            m_KeyStates[key] = KeyState::Released;
+            TriggerKeyReleasedCallbacks(key);
+        }
+    }
+
+    // Update axis values with smoothing
+    for (auto& [name, axis] : m_Axes)
+    {
+        float targetValue = 0.0f;
+        if (GetKey(axis.Positive))
+            targetValue += 1.0f;
+        if (GetKey(axis.Negative))
+            targetValue -= 1.0f;
+
+        // Sooth interpolation
+        if (axis.Smoothing > 0.0f)
+        {
+            float diff = targetValue - axis.CurrentValue;
+            axis.CurrentValue += diff * axis.Smoothing;
+
+            if (std::abs(diff) < 0.01f)
+                axis.CurrentValue = targetValue;
+        }
+        else
+        {
+            axis.CurrentValue = targetValue;
         }
     }
 }
-bool InputManager::IsKeyPressed(Key key) const
+
+bool InputManager::GetKey(Key key) const
 {
-    return m_CurrentState.at(key);
+    auto it = m_KeyStates.find(key);
+    if (it == m_KeyStates.end())
+        return false;
+    
+    return it->second == KeyState::Pressed || it->second == KeyState::Held;
+}
+
+bool InputManager::GetKeyPressed(Key key) const
+{
+    auto it = m_KeyStates.find(key);
+    if (it == m_KeyStates.end())
+        return false;
+    
+    return it->second == KeyState::Pressed;
+}
+
+bool InputManager::GetKeyReleased(Key key) const
+{
+    auto it = m_KeyStates.find(key);
+    if (it == m_KeyStates.end())
+        return false;
+    
+    return it->second == KeyState::Released;
+}
+
+bool InputManager::IsAnyKeyPressed() const
+{
+    for (const auto& [key, state] : m_KeyStates)
+    {
+        if (state == KeyState::Pressed || state == KeyState::Held)
+            return true;
+    }
+    return false;
+}
+
+void InputManager::GetPressedKeys(std::vector<Key>& outKeys) const
+{
+    outKeys.clear();
+    for (const auto& [key, state] : m_KeyStates)
+    {
+        if (state == KeyState::Pressed || state == KeyState::Held)
+            outKeys.push_back(key);
+    }
+}
+
+KeyState InputManager::GetKeyState(Key key) const
+{
+    auto it = m_KeyStates.find(key);
+    if (it == m_KeyStates.end())
+        return KeyState::None;
+    return it->second;
+}
+
+void InputManager::RegisterKeyPressedCalllback(Key key, KeyCallback callback)
+{
+    m_KeyPressedCallbacks[key].push_back(callback);
+}
+
+void InputManager::RegisterKeyReleasedCallback(Key key, KeyCallback callback)
+{
+    m_KeyReleasedCallbacks[key].push_back(callback);
+}
+
+void InputManager::UnregisterKeyPressedCallback(Key key)
+{
+    m_KeyPressedCallbacks.erase(key);
+}
+
+void InputManager::UnregisterKeyReleasedCallback(Key key)
+{
+    m_KeyReleasedCallbacks.erase(key);
+}
+
+void InputManager::TriggerKeyPressedCallbacks(Key key)
+{
+    auto it = m_KeyPressedCallbacks.find(key);
+    if (it != m_KeyPressedCallbacks.end())
+    {
+        for (auto& callback : it->second)
+        {
+            callback(key);
+        }
+    }
+}
+
+void InputManager::TriggerKeyReleasedCallbacks(Key key)
+{
+    auto it = m_KeyReleasedCallbacks.find(key);
+    if (it != m_KeyReleasedCallbacks.end())
+    {
+        for (auto& callback : it->second)
+        {
+            callback(key);
+        }
+    }
+}
+
+float InputManager::GetAxis(const char* axisName) const
+{
+    auto it = m_Axes.find(axisName);
+    if (it == m_Axes.end())
+        return 0.0f;
+    return it->second.CurrentValue;
+}
+
+float InputManager::GetAxisRaw(const char* axisName) const
+{
+    auto it = m_Axes.find(axisName);
+    if (it == m_Axes.end())
+        return 0.0f;
+    
+    float value = 0.0f;
+    if (GetKey(it->second.Positive))
+        value += 1.0f;
+    if (GetKey(it->second.Negative))
+        value -= 1.0f;
+    
+    return value;
+}
+
+void InputManager::ConfigureAxis(const char* axisName, Key positive, Key negative)
+{
+    AxisConfig config;
+    config.Positive = positive;
+    config.Negative = negative;
+    config.Smoothing = 0.1f;
+    config.CurrentValue = 0.0f;
+    
+    m_Axes[axisName] = config;
+}
+
+void InputManager::ClearAllInput()
+{
+    m_KeyStates.clear();
+    for (auto& [name, axis] : m_Axes)
+    {
+        axis.CurrentValue = 0.0f;
+    }
 }
 
 Key InputManager::TranslateCharToKey(char c, int32 extended)
@@ -141,11 +331,3 @@ Key InputManager::TranslateCharToKey(char c, int32 extended)
     }
 }
 
-InputManager::InputManager()
-{
-    for (auto& keystate : m_CurrentState)
-    {
-        keystate.second = false;
-    }
-    m_PreviousState = m_CurrentState;
-}

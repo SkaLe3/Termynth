@@ -34,6 +34,7 @@ enum class Key
 
 enum class KeyState
 {
+    None,
     Pressed,
     Released,
     Held
