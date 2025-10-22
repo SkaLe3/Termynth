@@ -22,6 +22,7 @@ public:
     virtual int kbhitNonBlocking() { return 0; }
     virtual char getchNonBlocking() { return ' '; }
     virtual void ReadExtendedKey(uint8& c, int32& ext) { (void)c; (void)ext;}
+    virtual bool GetAsyncKeyState(uint8 c) { (void)c; return false;}
 
     static PlatformUtilsGeneric& Get();
     static void Init();

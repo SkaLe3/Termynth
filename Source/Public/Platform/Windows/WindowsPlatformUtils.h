@@ -10,6 +10,7 @@ public:
     virtual int kbhitNonBlocking() override;
     virtual char getchNonBlocking() override;
     virtual void ReadExtendedKey(uint8& c, int32& ext) override;
+    virtual bool GetAsyncKeyState(uint8 c) override;
 
     virtual void MoveCursorTopLeft() override;
     virtual void HideCursor() override;

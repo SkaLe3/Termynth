@@ -71,3 +71,8 @@ void PlatformUtilsWindows::ReadExtendedKey(uint8 &c, int32 &ext)
         ext = 0;
     }
 }
+
+bool PlatformUtilsWindows::GetAsyncKeyState(uint8 c)
+{
+    return (::GetAsyncKeyState(c) & 0x8000) != 0;
+}

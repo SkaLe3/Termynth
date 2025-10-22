@@ -13,6 +13,8 @@ InputManager &InputManager::Get()
 
 InputManager::InputManager()
 {
+    PlatformUtils::Get().InitInput();
+
     m_KeyStates.clear();
 
     ConfigureAxis("Horizontal", Key::Right, Key::Left);
