@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Core.h"
 #include "Input/Key.h"
 #include <unordered_map>
 #include <vector>
@@ -42,6 +43,7 @@ public:
 
 private:
     Key TranslateCharToKey(char c, int extended = 0);
+    int32 TranslateKeyToVirtualKey(Key key);
     void TriggerKeyPressedCallbacks(Key key);
     void TriggerKeyReleasedCallbacks(Key key);
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Input/Key.h"
 
 class PlatformUtilsGeneric
 {
@@ -23,6 +24,7 @@ public:
     virtual char getchNonBlocking() { return ' '; }
     virtual void ReadExtendedKey(uint8& c, int32& ext) { (void)c; (void)ext;}
     virtual bool GetAsyncKeyState(uint8 c) { (void)c; return false;}
+    virtual int32 GetVirtualKeyCode(Key key) {(void)key; return 0;}
 
     static PlatformUtilsGeneric& Get();
     static void Init();
