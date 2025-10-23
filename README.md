@@ -9,6 +9,7 @@ It is designed to be lightweight, flexible, and developer-friendly, supporting m
 
 ***
 ## Table of Contents
+- [Documentation](#documentation)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
@@ -23,6 +24,11 @@ It is designed to be lightweight, flexible, and developer-friendly, supporting m
 - [License](#license)
 
 ***
+
+## Documentation
+
+- [InputManager Documentation](docs/InputManager.md)
+
 
 ## Features
 - **✅ Cross-platform** (Windows, Linux others via GCC/MSVC toolchains)
