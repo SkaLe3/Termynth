@@ -5,7 +5,7 @@
 #include "Platform/Windows/WindowsPlatformWindow.h"
 #elif defined(PLATFORM_LINUX)
 #include "Platform/Linux/LinuxPlatformWindow.h"
-#include "WindowSubsystem.h"
+#include "Core/WindowSubsystem.h"
 #endif
 
 void WindowSubsystem::Init(int32 width, int32 height)

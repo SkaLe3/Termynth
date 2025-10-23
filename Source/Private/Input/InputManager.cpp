@@ -70,11 +70,13 @@ void InputManager::PollInput()
     for (auto& [key, state] : m_KeyStates)
     {
         if ((state == KeyState::Held || state == KeyState::Pressed) &&
-            currentFrameKeys.find(key) == currentFrameKeys.end() &&
-            !PlatformUtils::Get().GetAsyncKeyState(TranslateKeyToVirtualKey(key)))
+            currentFrameKeys.find(key) == currentFrameKeys.end())
         {
-            m_KeyStates[key] = KeyState::Released;
-            TriggerKeyReleasedCallbacks(key);
+            if (!PlatformUtils::Get().GetAsyncKeyState(TranslateKeyToVirtualKey(key)))
+            {
+                m_KeyStates[key] = KeyState::Released;
+                TriggerKeyReleasedCallbacks(key);
+            }
         }
     }
 
@@ -370,44 +372,44 @@ int32 InputManager::TranslateKeyToVirtualKey(Key key)
         case Key::Tab:       return PlatformUtils::Get().GetVirtualKeyCode(Key::Tab);
 
         // Letters
-        case Key::A: return 'A';
-        case Key::B: return 'B';
-        case Key::C: return 'C';
-        case Key::D: return 'D';
-        case Key::E: return 'E';
-        case Key::F: return 'F';
-        case Key::G: return 'G';
-        case Key::H: return 'H';
-        case Key::I: return 'I';
-        case Key::J: return 'J';
-        case Key::K: return 'K';
-        case Key::L: return 'L';
-        case Key::M: return 'M';
-        case Key::N: return 'N';
-        case Key::O: return 'O';
-        case Key::P: return 'P';
-        case Key::Q: return 'Q';
-        case Key::R: return 'R';
-        case Key::S: return 'S';
-        case Key::T: return 'T';
-        case Key::U: return 'U';
-        case Key::V: return 'V';
-        case Key::W: return 'W';
-        case Key::X: return 'X';
-        case Key::Y: return 'Y';
-        case Key::Z: return 'Z';
+        case Key::A: return PlatformUtils::Get().GetVirtualKeyCode(Key::A);
+        case Key::B: return PlatformUtils::Get().GetVirtualKeyCode(Key::B);
+        case Key::C: return PlatformUtils::Get().GetVirtualKeyCode(Key::C);
+        case Key::D: return PlatformUtils::Get().GetVirtualKeyCode(Key::D);
+        case Key::E: return PlatformUtils::Get().GetVirtualKeyCode(Key::E);
+        case Key::F: return PlatformUtils::Get().GetVirtualKeyCode(Key::F);
+        case Key::G: return PlatformUtils::Get().GetVirtualKeyCode(Key::G);
+        case Key::H: return PlatformUtils::Get().GetVirtualKeyCode(Key::H);
+        case Key::I: return PlatformUtils::Get().GetVirtualKeyCode(Key::I);
+        case Key::J: return PlatformUtils::Get().GetVirtualKeyCode(Key::J);
+        case Key::K: return PlatformUtils::Get().GetVirtualKeyCode(Key::K);
+        case Key::L: return PlatformUtils::Get().GetVirtualKeyCode(Key::L);
+        case Key::M: return PlatformUtils::Get().GetVirtualKeyCode(Key::M);
+        case Key::N: return PlatformUtils::Get().GetVirtualKeyCode(Key::N);
+        case Key::O: return PlatformUtils::Get().GetVirtualKeyCode(Key::O);
+        case Key::P: return PlatformUtils::Get().GetVirtualKeyCode(Key::P);
+        case Key::Q: return PlatformUtils::Get().GetVirtualKeyCode(Key::Q);
+        case Key::R: return PlatformUtils::Get().GetVirtualKeyCode(Key::R);
+        case Key::S: return PlatformUtils::Get().GetVirtualKeyCode(Key::S);
+        case Key::T: return PlatformUtils::Get().GetVirtualKeyCode(Key::T);
+        case Key::U: return PlatformUtils::Get().GetVirtualKeyCode(Key::U);
+        case Key::V: return PlatformUtils::Get().GetVirtualKeyCode(Key::V);
+        case Key::W: return PlatformUtils::Get().GetVirtualKeyCode(Key::W);
+        case Key::X: return PlatformUtils::Get().GetVirtualKeyCode(Key::X);
+        case Key::Y: return PlatformUtils::Get().GetVirtualKeyCode(Key::Y);
+        case Key::Z: return PlatformUtils::Get().GetVirtualKeyCode(Key::Z);
 
         // Numbers
-        case Key::Num0: return '0';
-        case Key::Num1: return '1';
-        case Key::Num2: return '2';
-        case Key::Num3: return '3';
-        case Key::Num4: return '4';
-        case Key::Num5: return '5';
-        case Key::Num6: return '6';
-        case Key::Num7: return '7';
-        case Key::Num8: return '8';
-        case Key::Num9: return '9';
+        case Key::Num0: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num1);
+        case Key::Num1: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num2);
+        case Key::Num2: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num3);
+        case Key::Num3: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num4);
+        case Key::Num4: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num5);
+        case Key::Num5: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num6);
+        case Key::Num6: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num7);
+        case Key::Num7: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num8);
+        case Key::Num8: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num9);
+        case Key::Num9: return PlatformUtils::Get().GetVirtualKeyCode(Key::Num0);
 
         default: return 0; // Unknown key
     }
