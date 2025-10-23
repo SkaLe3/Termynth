@@ -27,7 +27,7 @@ It is designed to be lightweight, flexible, and developer-friendly, supporting m
 
 ## Documentation
 
-- [InputManager Documentation](docs/InputManager.md)
+- [InputManager Documentation](docs/input.md)
 
 
 ## Features
