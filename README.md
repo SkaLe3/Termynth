@@ -4,12 +4,33 @@
 [![C++](https://img.shields.io/badge/Language-C++20-blue)](https://isocpp.org)
 
 
-**Termynth** is a cross-platform game engine that features console-based rendering and built-in networking for multiplayer games.
-It is designed to be lightweight, flexible, and developer-friendly, supporting multiple ways of integration depending on your workflow. (Add: provides framework, but it is not strict, gives freedom)
+**Termynth** is a lightweight cross-platform console-based game engine with built-in networking support for multiplayer games.
+It is designed to be flexible, developer-friendly, and easily integrated into various workflows.
 
 ***
+
+## Termynth Features
+- **✅ Cross-platform** (Windows, Linux others via GCC/MSVC toolchains)
+- **✅ Console renderer** for lightweight output
+- **✅ Networking support** for multiplayer games
+- **✅ Custom project creation utility** (`CreateProject.exe`)
+- ✅ Flexible integration: install engine once, embed as submodule, or manage manually
+- ✅ Built with **CMake**, supporting standard build pipelines
+
+***
+
+## Documentation
+
+Full documentation is available via **GitHub Pages**: 
+[📖 Termynth Docs](https://skale3.github.io/Termynth/)
+
+## Getting Started
+
+For installation and setup, please refer to the **documentation** above.
+
+***
+
 ## Table of Contents
-- [Documentation](#documentation)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
@@ -25,9 +46,7 @@ It is designed to be lightweight, flexible, and developer-friendly, supporting m
 
 ***
 
-## Documentation
 
-- [InputManager Documentation](docs/input.md)
 
 
 ## Features
