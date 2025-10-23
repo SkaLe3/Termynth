@@ -15,6 +15,7 @@ It is designed to be lightweight, flexible, and developer-friendly, supporting m
     - [Option 1: Install the Engine](#option-1-install-the-engine)
     - [Option 2: Use as a Submodule](#option-2-use-as-a-submodule)
     - [Option 3: Manual / Custom Setup](#option-3-manual--custom-setup)
+- [Linux Input Setup](#linux-input-setup)
 - [Project Structure](#project-structure)
 - [Quick Start](#quick-start)
 - [Building and Running](#building-and-running)
@@ -108,6 +109,40 @@ By default, this will build the Shipping configuration for the client target
 - Skip the provided automation tools entirely
 - Use other compilers/toolchains beyond GCC/MSVC
 - Fully customize project structure and build with CMake
+
+## Linux Input Setup
+For continuous input (without the ~500 ms key repeat delay), Linux requires extra configuration.
+The Linux kernel restricts direct access to raw input devices (like the keyboard file) for security. These steps configure the system's udev device manager to permanently allow users in the standard input group to read the keyboard state, bypassing the default security block.
+
+### Steps
+
+1. **Grant User Access**
+
+Make sure your user is in the `input` group:
+
+```bash
+sudo usermod -aG input $USER
+```
+
+2. **Configure Device Permisions**
+
+Ensure input files are always owned by the input group.
+
+- Create a udev rule file:
+```bash
+sudo nano /etc/udev/rules.d/99-input-access.rules
+```
+- Add the following content:
+```bash
+# Grant read/write access to all input event devices for the 'input' group
+KERNEL=="event*", SUBSYSTEM=="input", MODE="0660", GROUP="input"
+```
+- Apply the new rules:
+```bash
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
 
 ## Project Structure
 
