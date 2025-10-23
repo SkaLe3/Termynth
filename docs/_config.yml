@@ -1,0 +1,4 @@
+title: Termynth Docs
+theme: minima   # simple default theme
+markdown: kramdown
+highlighter: rouge
