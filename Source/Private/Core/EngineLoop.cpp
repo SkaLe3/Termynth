@@ -8,6 +8,7 @@
 #include "Render/Renderer.h"
 #include "Input/InputManager.h"
 #include "Core/Logger.h"
+#include "Engine/AssetManager.h"
 
 #include <chrono>
 
@@ -22,6 +23,9 @@ int32 EngineLoop::Init()
     PlatformUtils::Init();
     PlatformUtils::Get().InitInput();
     PlatformUtils::Get().HideCursor();
+    AssetManager::Get().Initialize("");
+
+    LOG_INFO(fs::current_path().string());
 
     // Default viewport size
     GlobalParameters::g_ViewportWidth = 80;
@@ -90,6 +94,7 @@ void EngineLoop::Exit()
     g_Engine->Exit();
     delete g_Engine;
     // Shutdown everything here
+    AssetManager::Get().Shutdown();
     PlatformUtils::Get().ShowCursor();
     PlatformUtils::Get().RestoreInput();
 }

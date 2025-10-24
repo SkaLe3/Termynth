@@ -59,3 +59,13 @@ void PlatformUtilsGeneric::ShowCursor()
 {
     std::cout << "\033[?25h";
 }
+
+
+fs::path PlatformUtilsGeneric::EngineDir()
+{
+    return "";
+}
+fs::path PlatformUtilsGeneric::ProjectDir()
+{
+    return "";
+}

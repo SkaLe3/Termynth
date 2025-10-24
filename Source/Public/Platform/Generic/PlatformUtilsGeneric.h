@@ -26,6 +26,10 @@ public:
     virtual bool GetAsyncKeyState(uint8 c) { (void)c; return false;}
     virtual int32 GetVirtualKeyCode(Key key) {(void)key; return 0;}
 
+    /** Paths */
+    fs::path EngineDir();
+    fs::path ProjectDir();
+
     static PlatformUtilsGeneric& Get();
     static void Init();
 protected:
