@@ -1,4 +1,8 @@
 - title: Home
   url: /index.html
+- title: Setup
+  url: /setup.html
+- title: Guide
+  url: /guide.html
 - title: Input
   url: /input.html
