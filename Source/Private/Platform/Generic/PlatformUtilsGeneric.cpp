@@ -1,5 +1,6 @@
 #include "Platform/Generic/PlatformUtilsGeneric.h"
 #include "Core/Logger.h"
+#include "Core/Core.h"
 #include <iostream>
 
 PlatformUtilsGeneric* PlatformUtilsGeneric::s_Instance = nullptr;
@@ -63,9 +64,9 @@ void PlatformUtilsGeneric::ShowCursor()
 
 fs::path PlatformUtilsGeneric::EngineDir()
 {
-    return "";
+    return TERMYNTH_ENGINE_DIR;
 }
 fs::path PlatformUtilsGeneric::ProjectDir()
 {
-    return "";
+    return TERMYNTH_PROJECT_DIR;
 }

@@ -1,4 +1,5 @@
 #include "Core/EngineLoop.h"
+#include "Core/Core.h"
 #include "Platform/PlatformUtils.h"
 #include "Core/Globals.h"
 #include "Core/App.h"
@@ -9,10 +10,12 @@
 #include "Input/InputManager.h"
 #include "Core/Logger.h"
 #include "Engine/AssetManager.h"
+#include "Utils/Paths.h"
 
 #include <chrono>
 
 int64 g_FrameCounter = 0;
+
 
 EngineLoop::EngineLoop() {}
 EngineLoop::~EngineLoop() {}
@@ -23,9 +26,8 @@ int32 EngineLoop::Init()
     PlatformUtils::Init();
     PlatformUtils::Get().InitInput();
     PlatformUtils::Get().HideCursor();
-    AssetManager::Get().Initialize("");
+    AssetManager::Get().Initialize(Paths::EngineContentDir(), Paths::ProjectContentDir());
 
-    LOG_INFO(fs::current_path().string());
 
     // Default viewport size
     GlobalParameters::g_ViewportWidth = 80;

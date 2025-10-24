@@ -38,6 +38,7 @@ file(GLOB_RECURSE COMMON_AND_SERVER_SOURCES
     "Source/Private/Networking/*.cpp"
     "Source/Private/Server/*.cpp"
 	"Source/Private/Launch.cpp"
+	"Source/Private/Utils/*.cpp"
 )
 
 # 2. Client-only Source Files (ONLY FOR FULL ENGINE LIB)

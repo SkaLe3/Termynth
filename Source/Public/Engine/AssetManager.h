@@ -11,7 +11,7 @@ class AssetManager
 public:
     static AssetManager& Get();
 
-    void Initialize(const std::string& engineContentDir, const std::string& projectContentDir);
+    void Initialize(const fs::path& engineContentDir, const fs::path& projectContentDir);
     void Shutdown();
 
     bool MountPak(const std::string& pakPath);
@@ -39,8 +39,8 @@ private:
     std::string NormalizePath(const std::string& path);
 
 private:
-    std::string m_EngineContentDir;
-    std::string m_ProjectContentDir;
+     fs::path m_EngineContentDir;
+     fs::path m_ProjectContentDir;
     std::vector<std::unique_ptr<PakFile>> m_PakFiles;
     std::vector<std::shared_ptr<IAssetLoader>> m_Loaders;
     std::unordered_map<std::string, std::weak_ptr<IAsset>> m_LoadedAssets;

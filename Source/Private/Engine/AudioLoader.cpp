@@ -1,4 +1,4 @@
-#include "Engine/AudioClipLoader.h"
+#include "Engine/AudioLoader.h"
 
 #include "Engine/AudioClipAsset.h"
 
@@ -13,6 +13,8 @@ std::shared_ptr<IAsset> AudioLoader::Load(const std::vector<uint8>& data, const 
     audio->m_BitsPerSample = 16;
     audio->m_Data = data;
     audio->m_Loaded = true;
+
+    return audio;
 }
 bool AudioLoader::CanLoad(const std::string& extension) const
 {

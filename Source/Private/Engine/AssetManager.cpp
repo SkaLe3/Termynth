@@ -14,7 +14,7 @@ AssetManager& AssetManager::Get()
     return instance;
 }
 
-void AssetManager::Initialize(const std::string& engineContentDir, const std::string& projectContentDir)
+void AssetManager::Initialize(const fs::path& engineContentDir, const fs::path& projectContentDir)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
     m_EngineContentDir = engineContentDir;
@@ -49,9 +49,10 @@ void AssetManager::UnmountPak(const std::string& pakPath)
     std::lock_guard<std::mutex> lock(m_Mutex);
     m_PakFiles.erase(
         std::remove_if(m_PakFiles.begin(), m_PakFiles.end(),
-        [&](const auto& pak) {return false;}),
+        [&](const auto& pak) {return pak->GetPakPath() == pakPath;}),
         m_PakFiles.end()
     );
+
 }
 
 void AssetManager::RegisterLoader(std::shared_ptr<IAssetLoader> loader)
@@ -140,14 +141,14 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
             remainingPath /= component;
         }
     }
-    std::string fullPath;
+    fs::path fullPath;
     if (contentSource == "Engine")
     {
-        fullPath = m_EngineContentDir + "/" + path;
+        fullPath = m_EngineContentDir / path;
     }
     else if (contentSource == "Game")
     {
-        fullPath = m_ProjectContentDir + "/" + path;
+        fullPath = m_ProjectContentDir / path;
     }
     else
     {

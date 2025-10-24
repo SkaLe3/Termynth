@@ -25,7 +25,7 @@ public:
     void Close();
     bool Contains(const std::string& assetPath) const;
     std::vector<uint8> ReadAsset(const std::string& assetPath);
-
+    std::string GetPakPath() const {return m_PakPath;}
 private:
     std::string m_PakPath;
     std::unordered_map<std::string, Entry> m_Entries;
