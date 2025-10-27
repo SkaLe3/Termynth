@@ -20,7 +20,7 @@ enum class ELogLevel
 class Logger
 {
 public:
-    Logger(const std::string &filename, ELogLevel minLevel = ELogLevel::Info, bool autoFlush = true);
+    Logger(bool bLogConsole, bool bLogFile, const std::string &filename, ELogLevel minLevel = ELogLevel::Info, bool bNoStamp = false, bool autoFlush = true);
     ~Logger();
 
     void Log(ELogLevel level, const std::string &message);
@@ -43,14 +43,20 @@ private:
     std::mutex mtx;
     ELogLevel minLevel;
     bool autoFlush;
+    bool m_bLogToFile;
+    bool m_bLogToConsole;
+    bool m_bNoStamp;
 };
 
 // Global logger instance
 inline Logger* g_Logger = nullptr;
 
 // Helper macros for convenient logging
-#define LOG_INIT(filename) g_Logger = new Logger(filename)
-#define LOG_INIT_LEVEL(filename, level) g_Logger = new Logger(filename, level)
+#define LOG_INIT_FILE(filename) g_Logger = new Logger(false,true, filename)
+#define LOG_INIT_LEVEL_FILE(filename, level) g_Logger = new Logger(false, true, filename, level)
+#define LOG_INIT(console, file, filename) g_Logger = new Logger(console, file, filename) 
+#define LOG_INIT_LEVEL(console, file, filename, level) g_Logger = new Logger(console, file, filename, level) 
+#define LOG_INIT_NOSTAMP(level) g_Logger = new Logger(true, false, "", level, true);
 #define LOG_SHUTDOWN() \
     delete g_Logger;   \
     g_Logger = nullptr

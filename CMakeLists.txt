@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(ENGINE_VERSION 1.0)
 
 project(TermynthEngine VERSION ${ENGINE_VERSION})
-set(LIB_BASE_NAME "TermynthEngine")
+set(LIB_BASE_NAME "TermynthRuntime")
 
 
 # --------------------- C++ STANDARD & FLAGS ---------------------
@@ -32,20 +32,23 @@ endif()
 
 # 1. Core/Common/Server-side Source Files (REQUIRED BY BOTH LIB TARGETS)
 file(GLOB_RECURSE COMMON_AND_SERVER_SOURCES
-    "Source/Private/Core/*.cpp"
-    "Source/Private/Engine/*.cpp"
-	"Source/Private/Platform/*.cpp"
-    "Source/Private/Networking/*.cpp"
-    "Source/Private/Server/*.cpp"
-	"Source/Private/Launch.cpp"
-	"Source/Private/Utils/*.cpp"
+    "Source/Runtime/Termynth/Private/Core/*.cpp"
+    "Source/Runtime/Termynth/Private/Engine/*.cpp"
+	"Source/Runtime/Termynth/Private/Platform/*.cpp"
+    "Source/Runtime/Termynth/Private/Networking/*.cpp"
+    "Source/Runtime/Termynth/Private/Server/*.cpp"
+	"Source/Runtime/Termynth/Private/Utils/*.cpp"
 )
 
 # 2. Client-only Source Files (ONLY FOR FULL ENGINE LIB)
 file(GLOB_RECURSE CLIENT_ONLY_SOURCES
-    "Source/Private/Render/*.cpp"
-    "Source/Private/Audio/*.cpp"
-    "Source/Private/Input/*.cpp"
+    "Source/Runtime/Termynth/Private/Render/*.cpp"
+    "Source/Runtime/Termynth/Private/Audio/*.cpp"
+    "Source/Runtime/Termynth/Private/Input/*.cpp"
+)
+
+file(GLOB_RECURSE LAUNCH_MODULE_SOURCES
+	"Source/Runtime/Launch/Private/*.cpp"
 )
 
 # 3. Final lists
@@ -69,22 +72,55 @@ include(GNUInstallDirs)
 #-------------------------------------------------------------------
 
 # --- 1. FULL Engine Library (For Client) ---
-add_library(TermynthEngine STATIC ${ENGINE_SOURCES})
+add_library(TermynthRuntime STATIC ${ENGINE_SOURCES})
 # Setting PUBLIC includes ensures the root project can find engine headers
-target_include_directories(TermynthEngine PUBLIC 
-			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Public>
+target_include_directories(TermynthRuntime PUBLIC 
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Termynth/Public>
 			$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}>)
 
 # --- 2. SERVER-ONLY Library (For Server) ---
-add_library(TermynthEngineServer STATIC ${SERVER_LIB_SOURCES})
-target_include_directories(TermynthEngineServer PUBLIC 
-			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Public>
+add_library(TermynthRuntimeServer STATIC ${SERVER_LIB_SOURCES})
+target_include_directories(TermynthRuntimeServer PUBLIC 
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Termynth/Public>
 			$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}>)
 			
-target_compile_definitions(TermynthEngineServer PRIVATE DEDICATED_SERVER)
+target_compile_definitions(TermynthRuntimeServer PRIVATE DEDICATED_SERVER)
+
+
+# --- 3. Launch Module
+add_library(TermynthEngine STATIC ${LAUNCH_MODULE_SOURCES})
+target_include_directories(TermynthEngine PUBLIC 
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Termynth/Public>
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Launch/Public>
+			$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}>)
+			
+add_library(TermynthEngineServer STATIC ${LAUNCH_MODULE_SOURCES})
+target_include_directories(TermynthEngineServer PUBLIC 
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Termynth/Public>
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Launch/Public>
+			$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}>)
+
+# =======================================================
+# --------------------- Pak Builder Targets ---------------------
+# =======================================================
+file(GLOB_RECURSE PAK_BUILDER_SOURCES
+    "Source/Programs/TermynthPakBuilder/Private/*.cpp"
+)
+
+add_executable(TermynthPakBuilder ${PAK_BUILDER_SOURCES})
+target_include_directories(TermynthPakBuilder PUBLIC
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Termynth/Public>
+			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Programs/TermynthPakBuilder/Public>
+			$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}>)
+			
+
+set_target_properties(TermynthPakBuilder PROPERTIES
+	OUTPUT_NAME "TermynthPakBuilder$<$<CONFIG:Debug>:-Debug>$<$<CONFIG:Development>:-Development>"
+	)
+
 
 # --------------------- Engine Library Linking ---------------------
-foreach(LIB_TARGET IN ITEMS TermynthEngine TermynthEngineServer)
+foreach(LIB_TARGET IN ITEMS TermynthRuntime TermynthRuntimeServer)
     if(WIN32)
         target_link_libraries(${LIB_TARGET} PRIVATE ws2_32)
     elseif(UNIX)
@@ -93,13 +129,32 @@ foreach(LIB_TARGET IN ITEMS TermynthEngine TermynthEngineServer)
     endif()
 endforeach()
 
-set_target_properties(TermynthEngine PROPERTIES
+add_subdirectory(${PROJECT_SOURCE_DIR}/ThirdParty/zlib)
+set(ZLIB_LIB zlibstatic CACHE INTERNAL "")
+
+target_link_libraries(TermynthRuntime PRIVATE ${ZLIB_LIB})
+target_link_libraries(TermynthRuntimeServer PRIVATE ${ZLIB_LIB})
+
+set_target_properties(TermynthRuntime PROPERTIES
 	OUTPUT_NAME "${LIB_BASE_NAME}$<$<CONFIG:Debug>:-Debug>$<$<CONFIG:Development>:-Development>"
 	)
 
-set_target_properties(TermynthEngineServer PROPERTIES
+set_target_properties(TermynthRuntimeServer PROPERTIES
 	OUTPUT_NAME "${LIB_BASE_NAME}-Server$<$<CONFIG:Debug>:-Debug>$<$<CONFIG:Development>:-Development>"
 	)
+
+target_link_libraries(TermynthEngine PRIVATE TermynthRuntime)
+target_link_libraries(TermynthEngineServer PRIVATE TermynthRuntimeServer)
+target_link_libraries(TermynthPakBuilder PRIVATE TermynthRuntime)
+
+set_target_properties(TermynthEngine PROPERTIES
+	OUTPUT_NAME "TermynthEngine$<$<CONFIG:Debug>:-Debug>$<$<CONFIG:Development>:-Development>"
+	)
+
+set_target_properties(TermynthEngineServer PROPERTIES
+	OUTPUT_NAME "TermynthEngine-Server$<$<CONFIG:Debug>:-Debug>$<$<CONFIG:Development>:-Development>"
+	)
+
 
 # =======================================================
 # --------------------- Output Configuration ---------------------
@@ -116,7 +171,7 @@ set(BASE_OUTPUT_DIR "${PROJECT_BINARY_DIR}/Binaries/${PLATFORM_NAME}")
 set(INTERMEDIATE_DIR "${PROJECT_BINARY_DIR}/Intermediate/${PLATFORM_NAME}")
 
 # Configure output directories for libraries and intermediate files.
-foreach(TARGET IN ITEMS TermynthEngine TermynthEngineServer)
+foreach(TARGET IN ITEMS TermynthRuntime TermynthRuntimeServer TermynthEngine TermynthEngineServer)
     set_target_properties(${TARGET} PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY "${BASE_OUTPUT_DIR}/$<CONFIG>"
         LIBRARY_OUTPUT_DIRECTORY "${BASE_OUTPUT_DIR}/$<CONFIG>"
@@ -125,11 +180,18 @@ foreach(TARGET IN ITEMS TermynthEngine TermynthEngineServer)
     )
 endforeach()
 
+    set_target_properties(TermynthPakBuilder PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY "${BASE_OUTPUT_DIR}/$<CONFIG>"
+        LIBRARY_OUTPUT_DIRECTORY "${BASE_OUTPUT_DIR}/$<CONFIG>"
+        ARCHIVE_OUTPUT_DIRECTORY "${BASE_OUTPUT_DIR}/$<CONFIG>"
+        OBJECT_OUTPUT_DIRECTORY "${INTERMEDIATE_DIR}/$<CONFIG>/TermynthPakBuilder"
+    )
+
 # Set the source content folder
 set(CONTENT_SOURCE "${PROJECT_SOURCE_DIR}/Content")
 
 # For each target
-foreach(TARGET IN ITEMS TermynthEngine TermynthEngineServer)
+foreach(TARGET IN ITEMS TermynthRuntime TermynthRuntimeServer)
     get_target_property(RUNTIME_DIR ${TARGET} RUNTIME_OUTPUT_DIRECTORY)
 
     # Post-build command to copy Content folder
@@ -148,7 +210,7 @@ endforeach()
 
 
 # Install libraries
-install(TARGETS TermynthEngine TermynthEngineServer
+install(TARGETS TermynthRuntime TermynthRuntimeServer TermynthEngine TermynthEngineServer ${ZLIB_LIB}
 	EXPORT TermynthTargets
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -156,7 +218,13 @@ install(TARGETS TermynthEngine TermynthEngineServer
 )
 
 # Install public headers
-install(DIRECTORY Source/Public/
+install(DIRECTORY Source/Runtime/Termynth/Public/
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}
+)
+install(DIRECTORY Source/Runtime/Launch/Public/
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}
+)
+install(DIRECTORY Source/Programs/TermynthPakBuilder/Public/
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}
 )
 

@@ -1,8 +1,11 @@
 #include "Engine/PakFile.h"
+#include "Core/Logger.h"
 
 #include <fstream>
 #include <algorithm>
 #include <filesystem>
+
+#include <zlib.h>
 
 namespace fs = std::filesystem;
 
@@ -78,8 +81,63 @@ std::vector<uint8> PakFile::ReadAsset(const std::string& assetPath)
 
     if (entry.Compressed)
     {
-        // TODO: Implement decompression
+        std::vector<uint8> unpackedData;
+        if (Decompress(data, unpackedData, entry.UncompressedSize))
+        {
+            data = unpackedData;
+        }
+        else
+        {
+            LOG_ERROR("Failed to decompress: " + entry.Path);
+        }
     }
 
     return data;
+}
+bool PakFile::Compress(const std::vector<uint8_t> &input, std::vector<uint8_t> &output)
+{
+    if (input.empty())
+        return false;
+
+    output.clear();
+    output.resize(compressBound(input.size())); // allocate max possible size
+
+    uLongf compressedSize = output.size();
+    int32_t result = compress2(
+        output.data(),
+        &compressedSize,
+        input.data(),
+        input.size(),
+        Z_BEST_COMPRESSION);
+
+    if (result != Z_OK)
+    {
+        LOG_ERROR("  zlib compression failed");
+        return false;
+    }
+    output.resize(compressedSize);
+
+    return compressedSize < input.size();
+}
+
+bool PakFile::Decompress(const std::vector<uint8_t> &input, std::vector<uint8_t> &output, size_t expectedSize)
+{
+    if (input.empty() || expectedSize == 0)
+        return false;
+
+    output.resize(expectedSize);
+    uLongf destLen = expectedSize;
+    int32 result = uncompress(
+        output.data(),
+        &destLen,
+        input.data(),
+        input.size()
+    );
+
+    if (result != Z_OK)
+    {
+        LOG_ERROR("  zlib decompression failed");
+        return false;
+    }
+    return true;
 }

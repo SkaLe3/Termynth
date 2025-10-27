@@ -40,7 +40,7 @@ int32 Launch(int argc, char* argv[])
     //@TODO: Parse commnad line
     (void)argc;
     (void)argv;
-    LOG_INIT_LEVEL("game.log", ELogLevel::Debug);
+    LOG_INIT_LEVEL_FILE("game.log", ELogLevel::Debug);
     int32 errorResult = EngineInit();
 
     while (!IsExitRequested())

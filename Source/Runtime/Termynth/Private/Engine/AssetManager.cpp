@@ -127,16 +127,14 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
     {
         if (component == engineDirName && !bFound)
         {
-            contentSource = engineDirName;
             bFound = true;
         }
         else if (component == projectDirName && !bFound)
         {
-            contentSource = projectDirName;
             bFound = true;
         }
 
-        if (bFound)
+        else if (bFound)
         {
             remainingPath /= component;
         }

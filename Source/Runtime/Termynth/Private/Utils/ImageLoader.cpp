@@ -11,7 +11,7 @@ uint8* load_image_from_memory(const uint8* buffer, size_t size, int32& width, in
     }
     
     // [0-3] = width (uint32)
-    // [4-7] = channels (uint32)
+    // [4-7] = height (uint32)
     // [8]   = channels (uint8)
     // [9..] = raw pixel data
 
