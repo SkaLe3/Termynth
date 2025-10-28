@@ -6,7 +6,7 @@
 
 struct alignas(8) Cell
 {
-    uint8 Char;
+    uint8 Char[2];
     ECellAttribute Attributes;
     uint8 FgR, FgG, FgB;
     uint8 BgR, BgG, BgB;

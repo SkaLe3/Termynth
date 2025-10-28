@@ -10,14 +10,17 @@ uint8* load_image_from_memory(const uint8* buffer, size_t size, int32& width, in
         return nullptr;
     }
     
-    // [0-3] = width (uint32)
-    // [4-7] = height (uint32)
-    // [8]   = channels (uint8)
-    // [9..] = raw pixel data
+    // [0-3] = magic - "THTX" (uint32)
+    // [4-7] = width (uint32)
+    // [8-11] = height (uint32)
+    // [12]   = channels (uint8)
+    // [13..] = raw pixel data
+    int32 magic;
 
-    std::memcpy(&width, buffer, 4);
-    std::memcpy(&height, buffer + 4, 4);
-    channels = buffer[8];
+    std::memcpy(&magic, buffer, 4);
+    std::memcpy(&width, buffer + 4, 4);
+    std::memcpy(&height, buffer + 8, 4);
+    std::memcpy(&channels, buffer + 12, 1);
 
     if (width == 0 || height == 0 || (channels != 1 && channels != 2 && channels != 7 && channels != 8))
     {

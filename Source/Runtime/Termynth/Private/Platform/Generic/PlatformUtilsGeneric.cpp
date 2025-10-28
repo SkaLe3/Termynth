@@ -2,6 +2,7 @@
 #include "Core/Logger.h"
 #include "Core/Core.h"
 #include <iostream>
+#include "PlatformUtilsGeneric.h"
 
 PlatformUtilsGeneric* PlatformUtilsGeneric::s_Instance = nullptr;
 
@@ -42,6 +43,51 @@ void PlatformUtilsGeneric::ResetTerminal()
     std::cout << "\033c";
 }
 
+std::string PlatformUtilsGeneric::MakeUtf8(const uint8* value)
+{
+    char16_t c = static_cast<char16_t>(value[0] | (value[1] << 8));
+
+    std::string out;
+
+    if (c <= 0x7F) {
+        // 1-byte ASCII
+        out += static_cast<char>(c);
+    } 
+    else if (c <= 0x7FF) {
+        // 2-byte UTF-8
+        out += static_cast<char>(0xC0 | ((c >> 6) & 0x1F));
+        out += static_cast<char>(0x80 | (c & 0x3F));
+    } 
+    else {
+        // 3-byte UTF-8
+        out += static_cast<char>(0xE0 | ((c >> 12) & 0x0F));
+        out += static_cast<char>(0x80 | ((c >> 6) & 0x3F));
+        out += static_cast<char>(0x80 | (c & 0x3F));
+    }
+
+    return out;
+}
+
+std::string PlatformUtilsGeneric::Utf8FromChar16(char16_t c)
+{
+    std::string out;
+
+    if (c <= 0x7F) {
+        // 1-byte ASCII
+        out += static_cast<char>(c);
+    } else if (c <= 0x7FF) {
+        // 2-byte UTF-8
+        out += static_cast<char>(0xC0 | ((c >> 6) & 0x1F));
+        out += static_cast<char>(0x80 | (c & 0x3F));
+    } else {
+        // 3-byte UTF-8
+        out += static_cast<char>(0xE0 | ((c >> 12) & 0x0F));
+        out += static_cast<char>(0x80 | ((c >> 6) & 0x3F));
+        out += static_cast<char>(0x80 | (c & 0x3F));
+    }
+
+    return out;
+}
 void PlatformUtilsGeneric::MoveCursor(int32_t x, int32_t y)
 {
     std::cout << "\033[" << y << ";" << x << "H";

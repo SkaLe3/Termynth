@@ -11,6 +11,9 @@ public:
     virtual void ClearScreen();
     void ResetTerminal();
 
+    std::string MakeUtf8(const uint8* value);
+    std::string Utf8FromChar16(char16_t c);
+
     /** Cursor */
     void MoveCursor(int32 x, int32 y);
     virtual void MoveCursorTopLeft();

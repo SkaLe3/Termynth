@@ -21,7 +21,7 @@ public:
     virtual void Clear() = 0;
     virtual void SetFgClearColor(const Vector& color) = 0;
     virtual void SetBgClearColor(const Vector& color) = 0;
-    virtual void SetClearChar(char clearChar) = 0; 
+    virtual void SetClearChar(uint8* clearChar) = 0; 
     virtual void SetUseDefaultFgColor(bool bUse) = 0;
     virtual void SetUseDefaultBgColor(bool bUse) = 0;
 };
@@ -40,7 +40,7 @@ public:
     virtual void Clear() override;
     virtual void SetFgClearColor(const Vector& color) override;
     virtual void SetBgClearColor(const Vector& color) override;
-    virtual void SetClearChar(char clearChar) override;
+    virtual void SetClearChar(uint8* clearChar) override;
     virtual void SetUseDefaultFgColor(bool bUse) override;
     virtual void SetUseDefaultBgColor(bool bUse) override;
 
@@ -51,7 +51,7 @@ private:
     Vector m_BgClearColor;
     bool m_bUseDefaultFgColor;
     bool m_bUseDefaultBgColor;
-    char m_ClearChar;
+    uint8 m_ClearChar[7];
 };
 
 class Renderer

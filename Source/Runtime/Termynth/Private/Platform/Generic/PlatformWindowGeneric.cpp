@@ -226,5 +226,5 @@ bool PlatformWindowGeneric::IsBatchRunning() const
 
 void PlatformWindowGeneric::UpdateBatchBuffer(const Cell& cell)
 {
-    m_BatchBuffer += cell.Char;
+    m_BatchBuffer += PlatformUtils::Get().MakeUtf8(cell.Char);
 }

@@ -16,7 +16,8 @@ void ConsoleRenderer2D::Init(IPlatformWindow* window)
    m_BgClearColor = Vector(0, 0, 0);
    m_bUseDefaultFgColor = true;
    m_bUseDefaultBgColor = true;
-   m_ClearChar = ' ';
+   char16_t clearChar = ' ';
+   std::memcpy(m_ClearChar, &clearChar, 2);
 }
 void ConsoleRenderer2D::Shutdown()
 {
@@ -51,7 +52,7 @@ void ConsoleRenderer2D::Clear()
       m_Framebuffer->GetHandle() + m_Framebuffer->Width * m_Framebuffer->Height * sizeof(Cell),
       [this, clearAttributes](Cell &c)
       {
-         c.Char = m_ClearChar;
+         std::memcpy(c.Char, m_ClearChar, 2);
          c.Attributes = clearAttributes;
          c.FgR = m_FgClearColor.x;
          c.FgG = m_FgClearColor.y;
@@ -72,9 +73,9 @@ void ConsoleRenderer2D::SetBgClearColor(const Vector& color)
 {
    m_BgClearColor = color;
 }
-void ConsoleRenderer2D::SetClearChar(char clearChar)
+void ConsoleRenderer2D::SetClearChar(uint8* clearChar)
 {
-   m_ClearChar = clearChar;
+   std::memcpy(m_ClearChar, clearChar, 2);
 }
 
 void ConsoleRenderer2D::SetUseDefaultFgColor(bool bUse)
