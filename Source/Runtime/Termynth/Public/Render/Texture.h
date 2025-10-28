@@ -29,6 +29,8 @@ public:
     virtual uint32 GetHeight() const = 0;
     virtual ETextureFormat GetFormat() const = 0;
     virtual uint32 GetSize() const = 0;
+    virtual const uint8* GetData() const = 0;
+    virtual int32 GetBytesInCell() const = 0;
 
     const std::string& GetDebugName() const {return m_Desc.DebugName;}
 protected:
@@ -46,9 +48,11 @@ public:
     virtual uint32 GetHeight() const override { return m_Desc.Height;}
     virtual ETextureFormat GetFormat() const override {return m_Desc.Format;}
     virtual uint32 GetSize() const override;
+    virtual int32 GetBytesInCell() const override {return (int32)m_BytesInCell;}
 
-    const uint8* GetData() const {return m_Data;}
+    virtual const uint8* GetData() const override {return m_Data;}
 
 private:
     const uint8* m_Data;
+    uint8 m_BytesInCell;
 };

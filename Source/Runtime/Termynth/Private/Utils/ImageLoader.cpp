@@ -22,7 +22,7 @@ uint8* load_image_from_memory(const uint8* buffer, size_t size, int32& width, in
     std::memcpy(&height, buffer + 8, 4);
     std::memcpy(&channels, buffer + 12, 1);
 
-    if (width == 0 || height == 0 || (channels != 1 && channels != 2 && channels != 7 && channels != 8))
+    if (width == 0 || height == 0 || (channels != 3 && channels != 4 && channels != 9 && channels != 10))
     {
         LOG_ERROR("[ImageLoader] Invalid image header");
         return nullptr;
@@ -36,7 +36,7 @@ uint8* load_image_from_memory(const uint8* buffer, size_t size, int32& width, in
     }
 
     uint8* imageData = static_cast<uint8*>(std::malloc(pixelDataSize));
-    std::memcpy(imageData, buffer + 9, pixelDataSize);
+    std::memcpy(imageData, buffer + 13, pixelDataSize);
     return imageData;
 }
 

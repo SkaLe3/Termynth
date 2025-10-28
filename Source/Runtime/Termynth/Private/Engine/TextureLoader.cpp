@@ -22,16 +22,16 @@ std::shared_ptr<IAsset> TextureLoader::Load(const std::vector<uint8>& data, cons
 
     switch (channels)
     {
-    case 1:
+    case 3:
         desc.Format = ETextureFormat::DefaultText;
         break;
-    case 2:
+    case 4:
         desc.Format = ETextureFormat::AttributesText;
         break;
-    case 7: 
+    case 9: 
         desc.Format = ETextureFormat::ColoredText;
         break;
-    case 8:
+    case 10:
         desc.Format = ETextureFormat::AttributesColoredText;
         break;
     default:
@@ -57,5 +57,5 @@ std::shared_ptr<IAsset> TextureLoader::Load(const std::vector<uint8>& data, cons
 
 bool TextureLoader::CanLoad(const std::string& extension) const
 {
-    return extension == ".thtex";
+    return extension == ".thtx";
 }

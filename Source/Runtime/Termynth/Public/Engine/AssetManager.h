@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Engine/AssetTypes.h"
 #include "Engine/PakFile.h"
+#include "Core/Logger.h"
 
 #include <string>
 #include <memory>

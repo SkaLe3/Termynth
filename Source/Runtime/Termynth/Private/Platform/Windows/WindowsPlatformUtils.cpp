@@ -51,6 +51,13 @@ void PlatformUtilsWindows::Init()
     }
     s_Instance = new PlatformUtilsWindows();
 }
+
+void PlatformUtilsWindows::InitInput()
+{
+    LOG_INFO("Set console output to unicode");
+    SetConsoleOutputCP(65001);
+}
+
 int PlatformUtilsWindows::kbhitNonBlocking()
 {
     return _kbhit();

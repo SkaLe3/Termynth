@@ -14,13 +14,13 @@ uint32 TextureFormatToByteSize(ETextureFormat format)
     switch (format)
     {
     case ETextureFormat::DefaultText:
-        return 1;
+        return 3;
     case ETextureFormat::AttributesText:
-        return 2;
+        return 4;
     case ETextureFormat::ColoredText:
-        return 7;
+        return 9;
     case ETextureFormat::AttributesColoredText:
-        return 8;
+        return 10;
     default:
         return 0;
     }
@@ -29,8 +29,8 @@ uint32 TextureFormatToByteSize(ETextureFormat format)
 AsciiTexture::AsciiTexture(const TextureDesc& desc, const uint8* data)
 {
     m_Desc = desc;
-    uint32 bytesInCell = TextureFormatToByteSize(desc.Format);
-    m_Data = AllocateTexture(bytesInCell, desc.Width, desc.Height, data);
+    m_BytesInCell = TextureFormatToByteSize(desc.Format);
+    m_Data = AllocateTexture(m_BytesInCell, desc.Width, desc.Height, data);
     
 }
 

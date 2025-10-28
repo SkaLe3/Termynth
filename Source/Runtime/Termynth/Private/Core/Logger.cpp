@@ -55,7 +55,7 @@ void Logger::Log(ELogLevel level, const std::string &message)
         file << logData;
         if (autoFlush)
         {
-            Flush();
+            file.flush();
         }
     }
     if (m_bLogToConsole)

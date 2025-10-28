@@ -86,8 +86,10 @@ std::shared_ptr<IAsset> AssetManager::LoadAssetInternal(const std::string& path)
     IAssetLoader* loader = FindLoader(normalizedPath);
     if (!loader)
     {
+        LOG_WARNING("Could not find loader for the asset: " + normalizedPath);
         return nullptr;
     }
+  
 
     auto asset = loader->Load(data, normalizedPath);
     if (!asset)
@@ -127,10 +129,12 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
     {
         if (component == engineDirName && !bFound)
         {
+            contentSource = engineDirName;
             bFound = true;
         }
         else if (component == projectDirName && !bFound)
         {
+            contentSource = projectDirName;
             bFound = true;
         }
 
@@ -142,11 +146,11 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
     fs::path fullPath;
     if (contentSource == "Engine")
     {
-        fullPath = m_EngineContentDir / path;
+        fullPath = fs::absolute(m_EngineContentDir) / remainingPath;
     }
     else if (contentSource == "Game")
     {
-        fullPath = m_ProjectContentDir / path;
+        fullPath = fs::absolute(m_ProjectContentDir) / remainingPath;
     }
     else
     {
@@ -156,7 +160,7 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
     std::ifstream file(fullPath, std::ios::binary | std::ios::ate);
     if (!file.is_open())
     {
-        LOG_ERROR("Could not open asset file.");
+        LOG_ERROR("Could not open asset file: " + fullPath.string());
         return {};
     }
 

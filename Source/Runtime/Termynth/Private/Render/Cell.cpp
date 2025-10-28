@@ -1,12 +1,14 @@
 #include "Render/Cell.h"
 
+#include <cstring>
+
 bool Cell::MatchPropertiesExact(const Cell& lhs, const Cell& rhs)
 {
     return 
     (
         MatchAttributes(lhs, rhs) &&
         MatchFgColorExact(lhs, rhs) &&
-        MatchBgColorExact(lhs, rhs)
+        MatchBgColorExact(lhs, rhs) 
     );
 }
 

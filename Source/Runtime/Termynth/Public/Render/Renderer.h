@@ -4,6 +4,7 @@
 #include "Core/Math/Math.h"
 
 class IPlatformWindow;
+class Texture;
 
 class IRenderer
 {
@@ -44,6 +45,8 @@ public:
     virtual void SetUseDefaultFgColor(bool bUse) override;
     virtual void SetUseDefaultBgColor(bool bUse) override;
 
+    void DrawQuad(const iVector& pos, Texture* texture);
+
 private:
     IPlatformWindow* m_Window;
     FrameBuffer* m_Framebuffer;
@@ -62,6 +65,12 @@ public:
         static ConsoleRenderer2D s_Renderer;
         return s_Renderer;
     }
+
+    static ConsoleRenderer2D& GetConsole2D()
+    {
+        return static_cast<ConsoleRenderer2D&>(Get());
+    }
+
 private:
     Renderer() = default;
     ~Renderer() = default;

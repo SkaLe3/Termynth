@@ -26,8 +26,6 @@ int32 EngineLoop::Init()
     PlatformUtils::Init();
     PlatformUtils::Get().InitInput();
     PlatformUtils::Get().HideCursor();
-    AssetManager::Get().Initialize(Paths::EngineContentDir(), Paths::ProjectContentDir());
-
 
     // Default viewport size
     GlobalParameters::g_ViewportWidth = 80;
@@ -96,7 +94,6 @@ void EngineLoop::Exit()
     g_Engine->Exit();
     delete g_Engine;
     // Shutdown everything here
-    AssetManager::Get().Shutdown();
     PlatformUtils::Get().ShowCursor();
     PlatformUtils::Get().RestoreInput();
 }

@@ -1,6 +1,7 @@
 #include "Platform/Windows/WindowsPlatformWindow.h"
 #include "Core/Globals.h"
 #include "Core/Logger.h"
+#include "Platform/PlatformUtils.h"
 
 #include <string>
 #include <vector>
@@ -66,7 +67,9 @@ void WindowsPlatformWindow::SwapBuffers()
             const Cell& cell = m_Framebuffer->CurrentBuffer->Handle[idx];
 
             CHAR_INFO& ci = charBuffer[idx];
-            ci.Char.AsciiChar = cell.Char; 
+            //ci.Char.AsciiChar = cell.Char; 
+            WCHAR my_wchar = *(WCHAR*)cell.Char;
+            ci.Char.UnicodeChar = my_wchar;
             ci.Attributes = CellColorToWindowsAttribute(cell);
         }
     }

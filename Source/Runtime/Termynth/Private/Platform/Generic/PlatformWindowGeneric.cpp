@@ -25,7 +25,6 @@ PlatformWindowGeneric::~PlatformWindowGeneric()
 void PlatformWindowGeneric::SwapBuffers()
 {
     int32 lastEditedX;
-    
     for (int32 y = 0; y < m_Framebuffer->Height; ++y)
     {
         lastEditedX = -2;
@@ -46,9 +45,10 @@ void PlatformWindowGeneric::SwapBuffers()
             case EColorMode::Ansi16:
                 bDifferent = !Cell::EqualMapped(cc, cp);
             }
-    
+
             if (bDifferent || m_bDirty)
             {
+                
                 bool bNoActiveBatch = StartNewBatchIfNeeded(x, cc);
                 if (!bNoActiveBatch && !Cell::MatchPropertiesExact(cc, m_BatchProperties))
                 { 
@@ -227,4 +227,5 @@ bool PlatformWindowGeneric::IsBatchRunning() const
 void PlatformWindowGeneric::UpdateBatchBuffer(const Cell& cell)
 {
     m_BatchBuffer += PlatformUtils::Get().MakeUtf8(cell.Char);
+    //LOG_INFO(PlatformUtils::Get().MakeUtf8(cell.Char));
 }
