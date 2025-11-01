@@ -97,25 +97,57 @@ void ConsoleRenderer2D::DrawQuad(const iVector &pos, Texture *texture)
    {
       for (uint32 y = 0; y < texture->GetHeight(); y++)
       {
-         int32_t framebufferIndex = pos.x + (pos.y * m_Framebuffer->Width) + (x) + (y * m_Framebuffer->Width);
+         int32_t framebufferX = pos.x + x;
+         int32_t framebufferY = pos.y + y;
+         if (framebufferX >= m_Framebuffer->Width 
+               || framebufferY >= m_Framebuffer->Height
+               || framebufferX < 0
+               || framebufferY < 0)
+         {
+            continue;   
+         } 
+         int32_t framebufferIndex = framebufferX + framebufferY * m_Framebuffer->Width;
          int32_t textureIndex = (x + y * texture->GetWidth()) * bytesInCell;
-
-         if (framebufferIndex < 0) continue;
          
+         uint8* bytePtr = reinterpret_cast<uint8_t*>(start + framebufferIndex);
+
+         uint8 bTransparent = 0;
+         std::memcpy(&bTransparent, data + textureIndex + 2, 1);
+         if (bTransparent)
+         {
+            continue;
+         }
+
+
          switch (bytesInCell)
          {
          case 3:
          case 4:
          case 10:
-            std::memcpy(start + framebufferIndex, data + textureIndex, bytesInCell);
+            std::memcpy(bytePtr, data + textureIndex, bytesInCell);
             break;
          case 9:
-            std::memcpy(start + framebufferIndex, data + textureIndex, 3);
-            std::memcpy(start + framebufferIndex + 4, data + textureIndex + 3, 6);
+            std::memcpy(bytePtr, data + textureIndex, 3);
+            std::memcpy(bytePtr + 4, data + textureIndex + 3, 6);
             break;
          }
-         char16_t heart = 0x0047;
-         //std::memcpy(start + framebufferIndex, &heart, 2);
+
+         // If no color data -> use defaultFg and defaultBg flags
+         if (bytesInCell == 3)
+         {
+            uint8 attributes = 0;
+            attributes |= static_cast<uint8>(ECellAttribute::DefaultFg);
+            attributes |= static_cast<uint8>(ECellAttribute::DefaultBg);
+            std::memcpy(bytePtr + 3, &attributes, 1);
+         }
+         else if (bytesInCell == 4)
+         {
+            uint8 attributes = 0;
+            std::memcpy(&attributes, bytePtr + 3, 1);
+            attributes |= static_cast<uint8>(ECellAttribute::DefaultFg);
+            attributes |= static_cast<uint8>(ECellAttribute::DefaultBg);
+            std::memcpy(bytePtr + 3, &attributes, 1);
+         }
       }
    }
 }
