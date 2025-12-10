@@ -62,7 +62,7 @@ uint8 *load_image_from_text(const std::string &buffer, int32 &width, int32 &heig
             uint8_t cell[CELL_SIZE] = {}; // zero initialize everything
             cell[0] = static_cast<uint8_t>(c); // Char[0]
             cell[1] = 0;                        // Char[1]
-            cell[2] = (c == '\0') ? 1 : 0;      // bTransparent
+            cell[2] = (c == '\t') ? 1 : 0;      // bTransparent
             currentRow.insert(currentRow.end(), cell, cell + CELL_SIZE);
         }
     }
@@ -81,7 +81,7 @@ uint8 *load_image_from_text(const std::string &buffer, int32 &width, int32 &heig
     std::vector<uint8_t> data;
     data.reserve(height * maxWidth * CELL_SIZE);
 
-    uint8_t emptyCell[CELL_SIZE] = {}; // for padding
+    uint8_t emptyCell[CELL_SIZE] = {'\t', 0, 1}; // for padding
 
     for (auto& row : rows)
     {
