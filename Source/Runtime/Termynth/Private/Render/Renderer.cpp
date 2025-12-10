@@ -60,6 +60,11 @@ void ConsoleRenderer2D::Clear()
           c.BgG = m_BgClearColor.y;
           c.BgB = m_BgClearColor.z;
        });
+   std::for_each(m_Framebuffer->GetDepth(0, 0), m_Framebuffer->GetDepth(0, 0) + m_Framebuffer->Width * m_Framebuffer->Height,
+       [](uint8& depth)
+       {
+           depth = 0;
+       });
    PlatformUtils::Get().MoveCursorTopLeft();
 }
 void ConsoleRenderer2D::SetFgClearColor(const Vector &color)
@@ -107,6 +112,11 @@ void ConsoleRenderer2D::DrawQuad(const iVector &pos, const iVector2& regionStart
          {
             continue;   
          } 
+         if (*(m_Framebuffer->GetDepth(framebufferX, framebufferY)) > pos.z)
+         {
+             continue;
+         }
+         
          int32_t framebufferIndex = framebufferX + framebufferY * m_Framebuffer->Width;
          int32_t textureIndex = (x + y * texture->GetWidth()) * bytesInCell;
          
@@ -118,7 +128,7 @@ void ConsoleRenderer2D::DrawQuad(const iVector &pos, const iVector2& regionStart
          {
             continue;
          }
-
+         *m_Framebuffer->GetDepth(framebufferX, framebufferY) = pos.z;
 
          switch (bytesInCell)
          {

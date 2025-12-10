@@ -23,10 +23,12 @@ public:
     virtual ~FrameBuffer();
 
     virtual Cell* GetHandle() const;
+    virtual uint8* GetDepth(int32_t x, int32_t y) const;
 
     int32_t Width;
     int32_t Height;
     Cell* Handle;
+    uint8* DepthBuffer;
 };
 
 // Note: This comment was generated using GPT to correctly explain class purpose, but the class itself was implemented manually with no AI
@@ -56,6 +58,7 @@ public:
     ~NativeWindowFrameBuffer();
 
     virtual Cell* GetHandle() const override;
+    virtual uint8* GetDepth(int32 x, int32 y) const override;
 public:
     FrameBuffer* CurrentBuffer;
     FrameBuffer* PreviousBuffer;

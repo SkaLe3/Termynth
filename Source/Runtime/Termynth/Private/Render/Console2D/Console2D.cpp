@@ -11,6 +11,7 @@ void Console2D::DrawSprite(const Vector &pos, std::shared_ptr<Sprite> sprite)
     iVector screenpos;
     screenpos.x = pos.x - m_Camera.Position.x;
     screenpos.y = pos.y - m_Camera.Position.y;
+    screenpos.z = pos.z;
 
     screenpos.x = screenpos.x + GlobalParameters::g_ViewportWidth / 2;
     screenpos.y = screenpos.y + GlobalParameters::g_ViewportHeight / 2;
