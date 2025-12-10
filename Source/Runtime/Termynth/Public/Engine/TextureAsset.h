@@ -7,6 +7,8 @@ class Texture;
 class TextureAsset : public IAsset
 {
 public:
+    static TAssetPtr<TextureAsset> Create(const std::string& textureData);
+
     TextureAsset(const std::string& path) : m_Path(path) , m_Loaded(false) {}
 
     const std::string& GetPath() const override {return m_Path;}
@@ -17,7 +19,8 @@ public:
     int32 GetHeight() const {return m_Height;}
     int32 GetChannels() const {return m_Channels;}
     std::shared_ptr<Texture> GetData() const {return m_Data;}
-
+private:
+    TextureAsset();
 
 private:
     friend class TextureLoader;

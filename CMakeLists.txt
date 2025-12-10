@@ -13,12 +13,21 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;Development;Shipping" CACHE STRING "" FORCE
 
 if(MSVC)
     # MSVC warning levels and defines
-	set(CMAKE_CXX_FLAGS_DEBUG "/W4 /Od /DDEBUG")
-	set(CMAKE_CXX_FLAGS_DEVELOPMENT "/W4 /O1 /DDEVELOPMENT")
-	set(CMAKE_CXX_FLAGS_SHIPPING "/W4 /O2 /DNDEBUG /DSHIPPING")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /Od /DDEBUG")
+set(CMAKE_CXX_FLAGS_DEVELOPMENT "${CMAKE_CXX_FLAGS_DEVELOPMENT} /W4 /O1 /DDEVELOPMENT")
+set(CMAKE_CXX_FLAGS_SHIPPING "${CMAKE_CXX_FLAGS_SHIPPING} /W4 /O2 /DNDEBUG /DSHIPPING")
 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "" CACHE STRING "Linker flags for DEBUG executables")
 	set(CMAKE_EXE_LINKER_FLAGS_DEVELOPMENT "" CACHE STRING "Linker flags for DEVELOPMENT executables")
 	set(CMAKE_EXE_LINKER_FLAGS_SHIPPING "" CACHE STRING "Linker flags for SHIPPING executables")
+	# Always use dynamic CRT for all configs
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
+    # Fix iterator debug level
+    add_compile_options(
+        $<$<CONFIG:Debug>:/D_ITERATOR_DEBUG_LEVEL=2>
+        $<$<CONFIG:Development>:/D_ITERATOR_DEBUG_LEVEL=0>
+		$<$<CONFIG:Shipping>:/D_ITERATOR_DEBUG_LEVEL=0>
+    )
 else()
     # GCC/Clang flags
     set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra")

@@ -1,6 +1,4 @@
 #pragma once
-
-
 #include "Core/Math/Vector2.h"
 
 
@@ -17,12 +15,15 @@ namespace Math
                 T y;
                 T z;
             };
-            float data[3];
+            T data[3];
         };
         TVector() = default;
         constexpr explicit inline TVector(T value);
         constexpr inline TVector(T inX, T inY, T inZ);
-        //explicit inline TVector(const TVector2<T> vec, T inZ); 
+        explicit inline TVector(const TVector2<T> vec, T inZ); 
+
+        template<typename U>
+        explicit inline TVector(const TVector<U>& vec);
     }; 
 
     template<typename T>
@@ -38,5 +39,14 @@ namespace Math
     , y(inY)
     , z(inZ)
     {}
+
+    template <typename T>
+    template <typename U>
+    inline TVector<T>::TVector(const TVector<U> &vec)
+    : x(vec.x)
+    , y(vec.y)
+    , z(vec.z)
+    {
+    }
 
 } // namespace Math

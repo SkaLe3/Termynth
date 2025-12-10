@@ -14,7 +14,7 @@ class Cell;
  * It simply manages a single buffer of the specified width and height.
  * 
  * Always use GenHandle() function to get correct data handle of the CurrentBuffer, 
- * sice Handle variable may contain PreviousBuffer address if isntance runtime type is NativeWindowFrameBuffer
+ * since Handle variable may contain PreviousBuffer address if instance runtime type is NativeWindowFrameBuffer
  */
 class FrameBuffer
 {

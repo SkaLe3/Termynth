@@ -14,6 +14,8 @@ public:
     std::string MakeUtf8(const uint8* value);
     std::string Utf8FromChar16(char16_t c);
 
+    virtual void EnableVirtualTerminalProcessing() {}
+
     /** Cursor */
     void MoveCursor(int32 x, int32 y);
     virtual void MoveCursorTopLeft();

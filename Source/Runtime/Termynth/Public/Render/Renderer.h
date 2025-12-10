@@ -45,7 +45,7 @@ public:
     virtual void SetUseDefaultFgColor(bool bUse) override;
     virtual void SetUseDefaultBgColor(bool bUse) override;
 
-    void DrawQuad(const iVector& pos, Texture* texture);
+    void DrawQuad(const iVector& pos, const iVector2& regionStart, const iVector2& regionSize, Texture* texture);
 
 private:
     IPlatformWindow* m_Window;

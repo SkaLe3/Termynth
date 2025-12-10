@@ -5,7 +5,7 @@
 FrameBuffer::FrameBuffer(int32 width, int32 height)
     : Width(width), Height(height)
 {
-    Handle = new Cell[width * height * sizeof(Cell)];
+    Handle = new Cell[width * height];
 }
 FrameBuffer::~FrameBuffer()
 {

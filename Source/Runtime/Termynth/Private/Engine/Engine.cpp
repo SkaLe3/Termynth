@@ -6,6 +6,7 @@
 #include "Render/FrameBuffer.h"
 #include "Engine/AssetManager.h"
 #include "Engine/TextureLoader.h"
+#include "Engine/SpriteLoader.h"
 #include "Utils/Paths.h"
 
 
@@ -25,6 +26,7 @@ void Engine::Init()
     auto& assetManager = AssetManager::Get();
     assetManager.Initialize(Paths::EngineContentDir(), Paths::ProjectContentDir());
     assetManager.RegisterLoader(std::make_shared<TextureLoader>());
+    assetManager.RegisterLoader(std::make_shared<SpriteLoader>());
     assetManager.MountPak("PongTerminal.pak"); // Temporary name  
 
     m_GameInstance = CreateGameInstance();

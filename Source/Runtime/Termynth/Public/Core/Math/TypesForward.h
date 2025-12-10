@@ -3,9 +3,9 @@
 
 namespace Math
 {
-    template<typename T> class TVector;
-    template<typename T> class TVector2;
-    template<typename T> class TVector4;
+    template<typename T> struct TVector;
+    template<typename T> struct TVector2;
+    template<typename T> struct TVector4;
 
 } // namespace Math
 

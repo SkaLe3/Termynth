@@ -8,6 +8,7 @@ enum class EColorMode
 };
 
 
+
 namespace GlobalParameters
 {
     /**

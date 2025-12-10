@@ -18,6 +18,12 @@
 #define TERMYNTH_PROJECT_DIR ""
 #endif
 
+#if defined(_MSC_VER)
+#define PACKED_STRUCT(name) __pragma(pack(push, 1)) struct name __pragma(pack(pop))
+#else
+#define PACKED_STRUCT(name) struct __attribute__((packed)) name
+#endif
+
 
 #include <cstdint>
 #include <filesystem>

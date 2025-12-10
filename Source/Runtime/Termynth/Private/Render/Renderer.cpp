@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include "Core/Logger.h"
 
 void ConsoleRenderer2D::Init(IPlatformWindow *window)
 {
@@ -46,7 +47,7 @@ void ConsoleRenderer2D::Clear()
 
    std::for_each(
        m_Framebuffer->GetHandle(),
-       m_Framebuffer->GetHandle() + m_Framebuffer->Width * m_Framebuffer->Height * sizeof(Cell),
+       m_Framebuffer->GetHandle() + m_Framebuffer->Width * m_Framebuffer->Height,
        [this, clearAttributes](Cell &c)
        {
           std::memcpy(c.Char, m_ClearChar, 2);
@@ -83,7 +84,7 @@ void ConsoleRenderer2D::SetUseDefaultBgColor(bool bUse)
 {
    m_bUseDefaultBgColor = bUse;
 }
-void ConsoleRenderer2D::DrawQuad(const iVector &pos, Texture *texture)
+void ConsoleRenderer2D::DrawQuad(const iVector &pos, const iVector2& regionStart, const iVector2& regionSize, Texture *texture)
 {
    if (!m_Framebuffer)
       return;
@@ -93,9 +94,9 @@ void ConsoleRenderer2D::DrawQuad(const iVector &pos, Texture *texture)
 
    int32 bytesInCell = texture->GetBytesInCell();
 
-   for (uint32 x = 0; x < texture->GetWidth(); x++)
+   for (uint32 x = regionStart.x; x < regionStart.x + regionSize.x; x++)
    {
-      for (uint32 y = 0; y < texture->GetHeight(); y++)
+      for (uint32 y = regionStart.y; y < regionStart.y + regionSize.y; y++)
       {
          int32_t framebufferX = pos.x + x;
          int32_t framebufferY = pos.y + y;

@@ -8,6 +8,7 @@ class PlatformUtilsWindows : public PlatformUtilsGeneric
 public:
     virtual void ClearScreen() override; 
 
+    virtual void EnableVirtualTerminalProcessing() override;
     virtual void InitInput() override;
     virtual int kbhitNonBlocking() override;
     virtual char getchNonBlocking() override;

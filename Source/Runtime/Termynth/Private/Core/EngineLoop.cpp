@@ -24,6 +24,7 @@ int32 EngineLoop::Init()
 {
     InitTime();
     PlatformUtils::Init();
+    PlatformUtils::Get().EnableVirtualTerminalProcessing();
     PlatformUtils::Get().InitInput();
     PlatformUtils::Get().HideCursor();
 

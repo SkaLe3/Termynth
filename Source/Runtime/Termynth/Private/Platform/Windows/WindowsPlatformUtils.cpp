@@ -2,6 +2,7 @@
 #include "Core/Logger.h"
 #include <windows.h>
 #include <conio.h>
+#include <iostream>
 
 void PlatformUtilsWindows::ClearScreen()
 {
@@ -17,6 +18,23 @@ void PlatformUtilsWindows::ClearScreen()
     FillConsoleOutputCharacter(hOut, ' ', cells, topLeft, &written);
     FillConsoleOutputAttribute(hOut, csbi.wAttributes, cells, topLeft, &written);
     SetConsoleCursorPosition(hOut, topLeft);
+}
+
+void PlatformUtilsWindows::EnableVirtualTerminalProcessing()
+{
+#ifdef _WIN32
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hOut == INVALID_HANDLE_VALUE)
+		return;
+
+	DWORD dwMode = 0;
+	if (!GetConsoleMode(hOut, &dwMode))
+		return;
+
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(hOut, dwMode);
+    std::cout << std::flush;
+#endif
 }
 
 void PlatformUtilsWindows::MoveCursorTopLeft()

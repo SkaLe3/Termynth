@@ -163,6 +163,10 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
         LOG_ERROR("Could not open asset file: " + fullPath.string());
         return {};
     }
+    else
+    {
+        LOG_INFO("Opened asset file: " + fullPath.string());
+    }
 
     size_t size = file.tellg();
     file.seekg(0);
@@ -193,6 +197,8 @@ std::string AssetManager::NormalizePath(const std::string& path)
 {
     std::string normalized = path;
     std::replace(normalized.begin(), normalized.end(), '\\', '/');
+    while (!normalized.empty() && (normalized.back() == ' ' || normalized.back() == '\n' || normalized.back() == '\r' || normalized.back() == '\t'))
+        normalized.pop_back();
     return normalized;
 }
 

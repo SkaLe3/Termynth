@@ -10,7 +10,11 @@ public:
         int32 x, y, width, height;
     };
 
+    static TAssetPtr<SpriteAsset> Create(TAssetPtr<TextureAsset> texture, const Rect& rect);
+    static TAssetPtr<SpriteAsset> Create(TAssetPtr<TextureAsset> texture);
+
     SpriteAsset(const std::string& path) : m_Path(path), m_Loaded(false){}
+    SpriteAsset(TAssetPtr<TextureAsset> texture, const Rect& rect);
 
     const std::string& GetPath() const override {return m_Path;}
     bool IsLoaded() const override {return m_Loaded && m_Texture.IsValid();}
