@@ -70,7 +70,7 @@ bool Cell::MatchBgColorMapped(const Cell& lhs, const Cell& rhs)
 
 bool Cell::EqualMapped(const Cell& lhs, const Cell& rhs)
 {
-    return std::memcmp(lhs.Char, rhs.Char, 2) && MatchPropertiesMapped(lhs, rhs);
+    return (std::memcmp(lhs.Char, rhs.Char, 2) == 0) && MatchPropertiesMapped(lhs, rhs);
 }
 
 uint8 Cell::MapAnsi16(uint8 value)
@@ -85,7 +85,7 @@ bool operator==(const Cell& lhs, const Cell& rhs)
 {
     return 
     (   
-        std::memcmp(lhs.Char, rhs.Char, 2) &&
+        (std::memcmp(lhs.Char, rhs.Char, 2) == 0) &&
         lhs.Attributes == rhs.Attributes &&
         lhs.FgR == rhs.FgR &&
         lhs.FgG == rhs.FgG &&

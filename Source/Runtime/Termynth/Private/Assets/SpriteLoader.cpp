@@ -1,6 +1,6 @@
-#include "Engine/SpriteLoader.h"
-#include "Engine/SpriteAsset.h"
-#include "Engine/AssetManager.h"
+#include "Assets/SpriteLoader.h"
+#include "Assets/SpriteAsset.h"
+#include "Assets/AssetManager.h"
 
 #include <sstream>
 
@@ -17,7 +17,16 @@ std::shared_ptr<IAsset> SpriteLoader::Load(const std::vector<uint8>& data, const
     int32 x, y, w, h;
     iss >> x >> y >> w >> h;
 
+
     sprite->m_Texture = AssetManager::Get().LoadAsset<TextureAsset>(texturePath);
+    if (w == 0)
+    {
+        w = sprite->m_Texture->GetWidth();
+    }
+    if (h == 0)
+    {
+        h = sprite->m_Texture->GetHeight();
+    }
     sprite->m_Rect = {x, y, w, h};
     sprite->m_Loaded = true;
 

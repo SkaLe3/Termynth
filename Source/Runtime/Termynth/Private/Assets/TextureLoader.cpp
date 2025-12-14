@@ -1,5 +1,5 @@
-#include "Engine/TextureLoader.h"
-#include "Engine/TextureAsset.h"
+#include "Assets/TextureLoader.h"
+#include "Assets/TextureAsset.h"
 #include "Utils/ImageLoader.h"
 #include "Core/Logger.h"
 

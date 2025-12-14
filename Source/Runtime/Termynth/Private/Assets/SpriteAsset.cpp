@@ -1,4 +1,4 @@
-#include "Engine/SpriteAsset.h"
+#include "Assets/SpriteAsset.h"
 
 TAssetPtr<SpriteAsset> SpriteAsset::Create(TAssetPtr<TextureAsset> texture, const Rect& rect)
 {

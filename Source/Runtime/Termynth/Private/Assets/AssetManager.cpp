@@ -1,4 +1,4 @@
-#include "Engine/AssetManager.h"
+#include "Assets/AssetManager.h"
 #include "Core/Logger.h"
 
 #include <algorithm>
@@ -162,10 +162,6 @@ std::vector<uint8> AssetManager::ReadAssetData(const std::string& path)
     {
         LOG_ERROR("Could not open asset file: " + fullPath.string());
         return {};
-    }
-    else
-    {
-        LOG_INFO("Opened asset file: " + fullPath.string());
     }
 
     size_t size = file.tellg();

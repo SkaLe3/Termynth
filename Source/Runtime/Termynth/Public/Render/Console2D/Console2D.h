@@ -2,7 +2,7 @@
 #include "Render/Console2D/Camera2D.h"
 #include "Core/Math/Math.h"
 
-#include "Engine/SpriteAsset.h"
+#include "Assets/SpriteAsset.h"
 
 #include "Render/Renderer.h"
 #include "Render/Sprite.h"

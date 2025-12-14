@@ -24,6 +24,12 @@ namespace Math
 
         template<typename U>
         explicit inline TVector(const TVector<U>& vec);
+
+
+        [[nodiscard]] inline TVector<T> operator+(const TVector<T>& v) const;
+        [[nodiscard]] inline TVector<T> operator-(const TVector<T>& v) const;
+        [[nodiscard]] inline TVector<T> operator*(T scalar) const;
+        [[nodiscard]] inline TVector<T> operator*(const TVector<T>& v) const;
     }; 
 
     template<typename T>
@@ -39,6 +45,37 @@ namespace Math
     , y(inY)
     , z(inZ)
     {}
+
+    template <typename T>
+    inline TVector<T>::TVector(const TVector2<T> vec, T inZ)
+    : x(vec.x)
+    , y(vec.y)
+    , z(inZ)
+    {}
+
+    template <typename T>
+    inline TVector<T> TVector<T>::operator+(const TVector<T> &v) const
+    {
+        return TVector<T>(x + v.x, y + v.y, z + v.z);
+    }
+
+    template <typename T>
+    inline TVector<T> TVector<T>::operator-(const TVector<T> &v) const
+    {
+        return TVector<T>(x - v.x, y - v.y, z - v.z);
+    }
+
+    template <typename T>
+    inline TVector<T> TVector<T>::operator*(T scalar) const
+    {
+        return TVector<T>(x * scalar, y * scalar, z * scalar);
+    }
+
+    template <typename T>
+    inline TVector<T> TVector<T>::operator*(const TVector<T> &v) const
+    {
+        return TVector<T>(x * v.x, y * v.y, z * v.z);
+    }
 
     template <typename T>
     template <typename U>

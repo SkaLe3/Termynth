@@ -7,7 +7,8 @@ PlatformUtilsGeneric* PlatformUtilsGeneric::s_Instance = nullptr;
 
 PlatformUtilsGeneric::PlatformUtilsGeneric()
 {
-
+	std::ios::sync_with_stdio(false); // optional, decouple from C stdio
+    std::cout << std::nounitbuf; // disables automatic flush after each output
 }
 
 PlatformUtilsGeneric::~PlatformUtilsGeneric()

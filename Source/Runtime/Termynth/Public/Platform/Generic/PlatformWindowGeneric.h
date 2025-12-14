@@ -5,6 +5,14 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
+
+struct ConsoleUpdate
+{
+    int32 x, y;
+    std::string text;
+    bool bMoveCursor;
+};
 
 class PlatformWindowGeneric : public IPlatformWindow
 {
@@ -27,9 +35,13 @@ private:
 protected:
     NativeWindowFrameBuffer* m_Framebuffer;
     bool m_bDirty = false;
+    int32 m_ViewportStartX = 1;
+    int32 m_ViewportStartY = 1;
 
     int32 m_BatchStart;
     Cell m_BatchProperties;
     Cell m_LastBatchProperties;
     std::string m_BatchBuffer;
+
+    std::vector<ConsoleUpdate> m_Updates;
 };

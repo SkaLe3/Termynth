@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/AssetTypes.h"
+#include "Assets/AssetTypes.h"
 #include <memory>
 
 class Texture;

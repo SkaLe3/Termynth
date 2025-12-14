@@ -54,6 +54,7 @@ file(GLOB_RECURSE CLIENT_ONLY_SOURCES
     "Source/Runtime/Termynth/Private/Render/*.cpp"
     "Source/Runtime/Termynth/Private/Audio/*.cpp"
     "Source/Runtime/Termynth/Private/Input/*.cpp"
+	"Source/Runtime/Termynth/Private/Assets/*.cpp"
 )
 
 file(GLOB_RECURSE LAUNCH_MODULE_SOURCES
@@ -109,6 +110,7 @@ target_include_directories(TermynthEngineServer PUBLIC
 			$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/Source/Runtime/Launch/Public>
 			$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Termynth-${ENGINE_VERSION}>)
 
+target_compile_definitions(TermynthEngineServer PRIVATE DEDICATED_SERVER)
 # =======================================================
 # --------------------- Pak Builder Targets ---------------------
 # =======================================================
@@ -163,6 +165,7 @@ set_target_properties(TermynthEngine PROPERTIES
 set_target_properties(TermynthEngineServer PROPERTIES
 	OUTPUT_NAME "TermynthEngine-Server$<$<CONFIG:Debug>:-Debug>$<$<CONFIG:Development>:-Development>"
 	)
+
 
 
 # =======================================================

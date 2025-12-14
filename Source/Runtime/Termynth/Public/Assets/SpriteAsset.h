@@ -1,6 +1,6 @@
 #pragma once
-#include "Engine/AssetTypes.h"
-#include "Engine/TextureAsset.h"
+#include "Assets/AssetTypes.h"
+#include "Assets/TextureAsset.h"
 
 class SpriteAsset : public IAsset
 {

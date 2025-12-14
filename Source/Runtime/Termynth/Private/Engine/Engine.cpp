@@ -4,9 +4,9 @@
 #include "Core/WindowSubsystem.h"
 #include "Platform/Window.h"
 #include "Render/FrameBuffer.h"
-#include "Engine/AssetManager.h"
-#include "Engine/TextureLoader.h"
-#include "Engine/SpriteLoader.h"
+#include "Assets/AssetManager.h"
+#include "Assets/TextureLoader.h"
+#include "Assets/SpriteLoader.h"
 #include "Utils/Paths.h"
 
 
@@ -23,11 +23,13 @@ Engine::Engine()
 
 void Engine::Init()
 {
+#ifndef DEDICATED_SERVER
     auto& assetManager = AssetManager::Get();
     assetManager.Initialize(Paths::EngineContentDir(), Paths::ProjectContentDir());
     assetManager.RegisterLoader(std::make_shared<TextureLoader>());
     assetManager.RegisterLoader(std::make_shared<SpriteLoader>());
     assetManager.MountPak("PongTerminal.pak"); // Temporary name  
+#endif
 
     m_GameInstance = CreateGameInstance();
     m_GameInstance->Init();
@@ -53,5 +55,7 @@ void Engine::Exit()
 {
     m_GameInstance->End();
     m_GameInstance->Shutdown();
+    #ifndef DEDICATED_SERVER
     AssetManager::Get().Shutdown();
+    #endif
 }

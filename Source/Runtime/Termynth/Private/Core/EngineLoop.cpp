@@ -9,8 +9,9 @@
 #include "Render/Renderer.h"
 #include "Input/InputManager.h"
 #include "Core/Logger.h"
-#include "Engine/AssetManager.h"
+#include "Assets/AssetManager.h"
 #include "Utils/Paths.h"
+#include "Networking/NetworkingCore.h"
 
 #include <chrono>
 
@@ -24,7 +25,7 @@ int32 EngineLoop::Init()
 {
     InitTime();
     PlatformUtils::Init();
-    PlatformUtils::Get().EnableVirtualTerminalProcessing();
+    //PlatformUtils::Get().EnableVirtualTerminalProcessing();
     PlatformUtils::Get().InitInput();
     PlatformUtils::Get().HideCursor();
 
@@ -37,10 +38,14 @@ int32 EngineLoop::Init()
     // User Init. May override viewport size
     ApplicationInit();
 
-    // @TODO: Parse commnadline arguments to override viewport size here
+    Net::Networking::Init();
 
+    // @TODO: Parse commnadline arguments to override viewport size here and read port
+
+    #ifndef DEDICATED_SERVER
     WindowSubsystem::Get().Init(GlobalParameters::g_ViewportWidth, GlobalParameters::g_ViewportHeight);
     Renderer::Get().Init(WindowSubsystem::Get().GetWindow());
+    #endif
     g_Engine = new Engine();
     // Engine parse command line if needed
     // Make Init profiling
@@ -65,11 +70,15 @@ void EngineLoop::Tick()
 
     auto DoTick = [&](float deltaTime)
     {
+        #ifndef DEDICATED_SERVER
         InputManager::Get().PollInput();
         Renderer::Get().BeginFrame();
+        #endif
         g_Engine->Tick(deltaTime);
+        #ifndef DEDICATED_SERVER
         Renderer::Get().EndFrame();
         WindowSubsystem::Get().GetWindow()->SwapBuffers();
+        #endif
         g_FrameCounter++;
     };
 
@@ -92,11 +101,14 @@ void EngineLoop::Tick()
 
 void EngineLoop::Exit()
 {
+    Net::Networking::Shutdown();
     g_Engine->Exit();
     delete g_Engine;
     // Shutdown everything here
+#ifndef DEDICATED_SERVER
     PlatformUtils::Get().ShowCursor();
     PlatformUtils::Get().RestoreInput();
+#endif
 }
 
 void EngineLoop::UpdateTimeStep()
