@@ -48,6 +48,9 @@ namespace Net
     void Networking::Init()
     { 
         INIT_NETWORK();
+        #ifdef DEDICATED_SERVER
+            NetContext::Role = ENetRole::Server;
+        #endif
     }
     void Networking::Shutdown()
     {
