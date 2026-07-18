@@ -1,13 +1,7 @@
 #pragma once
 #include "Core/Core.h"
+#include "NetTypes.h"
 #include <type_traits>
-
-enum class ENetRole : uint8
-{
-    None,
-    Server,
-    Client
-};
 
 class NetContext
 {
@@ -19,25 +13,11 @@ public:
 
 namespace Net
 {
-    inline bool IsServer()
+    enum class ENetErrorResponse : uint8
     {
-        return NetContext::Role == ENetRole::Server;
-
-    }
-
-    inline bool IsClient()
-    {
-        return NetContext::Role == ENetRole::Client;
-    }
-
-    inline bool HasAuthority()
-    {
-        return static_cast<uint8>(NetContext::Role) < static_cast<uint8>(ENetRole::Client);
-    }
-
-
-
-
+        Retry,
+        CloseConnection
+    };
 
     using Byte = uint8;
 

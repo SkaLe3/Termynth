@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <sstream>
 #include <format>
+#include <string>
 
 enum class ELogLevel
 {
@@ -77,3 +78,23 @@ inline Logger* g_Logger = nullptr;
     if (g_Logger)      \
     g_Logger->Fatal(msg)
 
+#ifdef NDEBUG
+    #define ASSERT(expr) ((void)0)
+#else
+    #define ASSERT(expr)                                                \
+        do                                                              \
+        {                                                               \
+            if (!(expr))                                                \
+            {                                                           \
+                std::stringstream ss;                                   \
+                ss << "Assertion failed: " #expr                        \
+                          << "\nFile: " << __FILE__                     \
+                          << "\nLine: " << __LINE__ << std::endl;       \
+                if (g_Logger)                                           \
+                {                                                       \
+                    g_Logger->Fatal(ss.str());                          \
+                }                                                       \
+                std::abort();                                           \
+            }                                                           \
+        } while (0)
+#endif
